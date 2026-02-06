@@ -1,0 +1,122 @@
+/* Button Border Radius Fix - Override all buttons to have rounded corners */
+
+.btn,
+button.btn,
+a.btn,
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info,
+.btn-chesscom,
+.action-btn,
+.create-tournament-btn,
+.join-tournament-btn,
+.save-btn,
+.submit-btn,
+.cancel-btn,
+.edit-btn,
+.delete-btn,
+.menu-btn,
+.btn-next,
+.btn-prev,
+.btn-submit,
+.btn-login,
+.btn-register,
+.join-btn,
+.add-tournament-btn,
+.additional-settings-btn,
+.customize-btn,
+.settings-menu-btn,
+.back-btn,
+.admin-btn,
+.admin-action-btn,
+.revoke-btn,
+.award-btn,
+.popup-btn-primary,
+.popup-btn-secondary,
+.cta-btn,
+.tab-btn,
+.info-btn,
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    border-radius: 25px !important;
+}
+
+/* Smaller buttons */
+.btn-sm,
+.btn.btn-sm {
+    border-radius: 20px !important;
+}
+
+/* Large buttons */
+.btn-lg,
+.btn.btn-lg {
+    border-radius: 30px !important;
+}
+
+/* Icon buttons - circle */
+.btn-icon,
+.notification-bell,
+.theme-btn,
+.user-dropdown-btn {
+    border-radius: 25px !important;
+}
+
+/* Cards and containers keep subtle rounding */
+.card,
+.modal-content,
+.dropdown-menu,
+.theme-dropdown,
+.user-dropdown {
+    border-radius: 12px !important;
+}
+
+/* Input fields */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+    border-radius: 8px !important;
+}
+
+/* Small elements */
+.badge,
+.tag,
+.chip {
+    border-radius: 20px !important;
+}
+
+/* Tournament and player cards */
+.tournament-card,
+.player-card,
+.game-card {
+    border-radius: 12px !important;
+}
+
+/* Chess board and pieces containers */
+.chess-board {
+    border-radius: 8px !important;
+}
+
+/* Alerts and notifications */
+.alert,
+.toast,
+.notification-item {
+    border-radius: 8px !important;
+}
+
+/* Modals */
+.modal-header {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.modal-footer {
+    border-radius: 0 0 12px 12px !important;
+}

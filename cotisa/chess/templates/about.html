@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O nama - COTISA Pro</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="{% url 'index' %}" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;"><img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon" style="height: 32px;"> COTISA Pro</a></h1>
+            <div class="header-right">
+                <div class="icon-space">
+                    <i class="fas fa-chess-king"></i>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown()">☰</button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'index' %}"><i class="fas fa-home"></i> Početna</a>
+                        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profil</a>
+                        <a href="#" onclick="openSettingsFromNav(); return false;"><i class="fas fa-cog"></i> Postavke</a>
+                        <a href="{% url 'manage_tournaments' %}"><i class="fas fa-trophy"></i> Upravljanje Turnirima</a>
+                        <a href="{% url 'player_database' %}"><i class="fas fa-database"></i> Baza Igrača</a>
+                        <a href="{% url 'history' %}"><i class="fas fa-chart-bar"></i> Izvještaji i Statistike</a>
+                        <a href="{% url 'help' %}"><i class="fas fa-question-circle"></i> Pomoć</a>
+                        <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> O nama</a>
+                        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Odjava</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="about-container">
+                <section class="mission">
+                    <h2>Our Mission</h2>
+                    <p class="mission-statement">
+                        We believe chess is more than just a game—it's a bridge that connects minds across cultures, 
+                        ages, and backgrounds. Our mission is to make chess tournament organization and participation 
+                        accessible, enjoyable, and professional for players at all levels.
+                    </p>
+                </section>
+
+                <section class="story">
+                    <h2>Our Story</h2>
+                    <div class="story-content">
+                        <p>
+                            Founded in 2023 by a team of passionate chess players and software developers, 
+                            Chess Tournament Manager was born from a simple observation: organizing chess 
+                            tournaments was unnecessarily complicated and time-consuming.
+                        </p>
+                        <p>
+                            After years of participating in tournaments with outdated systems, manual 
+                            pairings, and communication challenges, we decided to build a solution that 
+                            would streamline the entire process—from registration to final standings.
+                        </p>
+                        <p>
+                            Today, we're proud to serve thousands of chess players and tournament organizers 
+                            worldwide, making competitive chess more accessible than ever before.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="values">
+                    <h2>Our Values</h2>
+                    <div class="values-grid">
+                        <div class="value-item">
+                            <h3><img src="{% static 'images/logo_cotisa.png' %}" alt="" style="height: 24px; vertical-align: middle;"> Excellence</h3>
+                            <p>We strive for perfection in every aspect of tournament management, from seamless user experience to accurate pairing algorithms.</p>
+                        </div>
+                        <div class="value-item">
+                            <h3>♕ Accessibility</h3>
+                            <p>Chess should be available to everyone. We work to remove barriers and make tournament play accessible to players of all backgrounds.</p>
+                        </div>
+                        <div class="value-item">
+                            <h3>♖ Innovation</h3>
+                            <p>We continuously evolve our platform with cutting-edge technology to enhance the chess tournament experience.</p>
+                        </div>
+                        <div class="value-item">
+                            <h3>♗ Community</h3>
+                            <p>We foster a supportive community where players can grow, learn, and enjoy the beautiful game of chess together.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="team">
+                    <h2>Meet Our Team</h2>
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <div class="member-photo">
+                                <span>👨‍💻</span>
+                            </div>
+                            <h3>David Martinez</h3>
+                            <p class="role">Lead Developer & Co-Founder</p>
+                            <p class="bio">FIDE Master and software architect with 15 years of tournament experience. Specializes in pairing algorithms and system architecture.</p>
+                        </div>
+                        
+                        <div class="team-member">
+                            <div class="member-photo">
+                                <span>👩‍💼</span>
+                            </div>
+                            <h3>Sarah Chen</h3>
+                            <p class="role">Product Manager & Co-Founder</p>
+                            <p class="bio">Former tournament director and UX designer. Passionate about creating intuitive experiences for chess players and organizers.</p>
+                        </div>
+                        
+                        <div class="team-member">
+                            <div class="member-photo">
+                                <span>👨‍🏫</span>
+                            </div>
+                            <h3>Michael Rodriguez</h3>
+                            <p class="role">Chess Consultant</p>
+                            <p class="bio">International Arbiter with 25+ years of tournament directing experience. Ensures our platform meets all FIDE regulations.</p>
+                        </div>
+                        
+                        <div class="team-member">
+                            <div class="member-photo">
+                                <span>👩‍💻</span>
+                            </div>
+                            <h3>Anna Kowalski</h3>
+                            <p class="role">Backend Developer</p>
+                            <p class="bio">Database specialist and chess enthusiast. Focuses on performance optimization and data analytics for tournament insights.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="stats">
+                    <h2>By the Numbers</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <h3>10,000+</h3>
+                            <p>Active Players</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>2,500+</h3>
+                            <p>Tournaments Organized</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>50+</h3>
+                            <p>Countries Served</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>99.9%</h3>
+                            <p>Uptime Reliability</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="contact">
+                    <h2>Get in Touch</h2>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <h3>📍 Headquarters</h3>
+                            <p>123 Chess Avenue<br>
+                            Tournament City, TC 12345<br>
+                            United States</p>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <h3>📞 Contact</h3>
+                            <p>Email: info@chesstournamentmanager.com<br>
+                            Phone: +1 (555) 123-4567<br>
+                            Support: support@chesstournamentmanager.com</p>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <h3>🌐 Follow Us</h3>
+                            <p>Twitter: @ChessTourneyMgr<br>
+                            LinkedIn: Chess Tournament Manager<br>
+                            Facebook: ChessTournamentManager</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="cta">
+                    <h2>Join Our Community</h2>
+                    <p>Ready to experience the future of chess tournament management? 
+                    Whether you're a player looking for your next competition or an organizer 
+                    seeking to streamline your events, we're here to help.</p>
+                    <div class="cta-buttons">
+                        <button class="cta-btn primary" onclick="window.location.href='{% url 'index' %}'">Get Started</button>
+                        <button class="cta-btn secondary" onclick="window.location.href='{% url 'help' %}'">Learn More</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="{% static 'js/dropdown.js' %}"></script>
+</body>
+</html>

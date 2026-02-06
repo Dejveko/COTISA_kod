@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: rgb(70, 21, 70);
+        }
+        #loginForm {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%); /* center */
+            width: 320px;
+            max-width: 90%;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,.12);
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <H1>Chessmaster pro -- coming soon</H1>
+        <form action="" id = "loginForm" method="post" >
+            {% csrf_token %}
+            <h2>Samo za administratore</h2>
+            {% if error %}
+            <p style="color: red; font-weight: bold;">{{ error_message }}</p>
+            {% endif %}
+            <label for="username">Korisničko ime:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">Lozinka:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <input type="submit" value="Uđi na stranicu">
+        </form>
+        <p style="color: #ccc; font-size: 12px; margin-top: 20px;">
+            Stranica je trenutno u zatvorenom beta testiranju. Potreban je administratorski pristup.
+        </p>
+    </center>
+
+</body>
+</html>

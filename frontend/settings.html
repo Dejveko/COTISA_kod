@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postavke - COTISA</title>
+    <script src="js/mobile-touch-fix.js?v=1"></script>
+    <link rel="stylesheet" href="css/themes.css?v=4">
+    <link rel="stylesheet" href="css/main.css?v=17">
+    <link rel="stylesheet" href="css/components.css?v=8">
+    <link rel="stylesheet" href="css/theme-overrides.css?v=6">
+    <link rel="stylesheet" href="css/button-fix.css?v=5">
+    <link rel="stylesheet" href="css/mobile.css?v=23">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function() {
+            const theme = localStorage.getItem('cotisa-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            // Apply board and piece styles IMMEDIATELY to prevent flash
+            const boardStyle = localStorage.getItem('chess-board-style') || 'classic';
+            const pieceStyle = localStorage.getItem('chess-piece-style') || 'classic';
+            const tabsPosition = localStorage.getItem('tabs-position') || 'top';
+            console.log('🚀 EARLY LOAD - Tema:', theme, 'Ploča:', boardStyle, 'Figure:', pieceStyle, 'Tabs:', tabsPosition);
+            document.documentElement.setAttribute('data-board-style', boardStyle);
+            document.documentElement.setAttribute('data-piece-style', pieceStyle);
+            document.body?.setAttribute('data-tabs-position', tabsPosition);
+            
+            // Also set on DOMContentLoaded in case body wasn't ready
+            document.addEventListener('DOMContentLoaded', function() {
+                document.body.setAttribute('data-tabs-position', tabsPosition);
+            });
+        })();
+    </script>
+    <style>
+        /* Force hide mobile nav items on desktop */
+        @media (min-width: 577px) {
+            .mobile-nav-item,
+            .mobile-nav-divider {
+                display: none !important;
+            }
+        }
+        
+        .settings-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .theme-preview {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .theme-preview:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .theme-preview.active {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+        }
+        
+        .theme-preview-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .chess-style-preview {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .chess-style-preview:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .chess-style-preview.active {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+        }
+        
+        .chess-board-mini {
+            display: grid;
+            grid-template-columns: repeat(4, 30px);
+            grid-template-rows: repeat(4, 30px);
+            margin: 0 auto 0.5rem;
+            border: 1px solid var(--border-dark);
+        }
+        
+        .chess-square {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .piece-examples {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .setting-label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .setting-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: 0.4s;
+            border-radius: 26px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        /* Toast notification for auto-save feedback */
+        .auto-save-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--success, #10b981);
+            color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .auto-save-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="index.html#/dashboard" class="nav-brand">
+                <img src="images/logo_cotisa.png" alt="COTISA" class="logo-icon">
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" id="nav-dashboard">🏠 Početna</a></li>
+                <li><a href="index.html#/players" id="nav-players">👥 Igrači</a></li>
+                <li><a href="index.html#/profile" id="nav-profile">👤 Profil</a></li>
+                <li><a href="index.html#/admin" id="nav-admin" class="admin-only" style="display: none;">⚙️ Admin</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Notifications -->
+                <div class="notifications-container">
+                    <button class="notification-bell" id="notification-bell">
+                        🔔
+                        <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
+                    </button>
+                    <div class="notifications-dropdown" id="notifications-dropdown">
+                        <div class="notifications-header">
+                            <h3 data-i18n="notifications.title">Obavijesti</h3>
+                            <button class="btn btn-sm btn-secondary" id="mark-all-read" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" data-i18n="notifications.markAll">
+                                Označi sve
+                            </button>
+                        </div>
+                        <div class="notifications-list" id="notifications-list">
+                            <div class="notification-empty">
+                                <p data-i18n="notifications.empty">Nema novih obavijesti</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Dropdown Menu -->
+                <div class="user-dropdown-container">
+                    <button class="user-dropdown-btn" id="user-dropdown-btn" title="Korisnički meni">
+                        <span id="username-display">Korisnik</span>
+                        <span id="user-role" class="role-badge"></span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="user-dropdown-header">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-details">
+                                <div class="user-name" id="dropdown-username">Korisnik</div>
+                                <div class="user-email" id="dropdown-email">email@example.com</div>
+                            </div>
+                        </div>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="index.html#/profile" class="user-dropdown-item">
+                            <span class="item-icon">👤</span>
+                            <span>Moj Profil</span>
+                        </a>
+                        <a href="index.html#/admin" class="user-dropdown-item admin-only" style="display: none;" id="admin-dashboard-link">
+                            <span class="item-icon">⚙️</span>
+                            <span>Admin Upravljanje</span>
+                        </a>
+                        <a href="settings.html" class="user-dropdown-item">
+                            <span class="item-icon">⚙️</span>
+                            <span>Postavke</span>
+                        </a>
+                        <a href="help.html" class="user-dropdown-item">
+                            <span class="item-icon">❓</span>
+                            <span>Pomoć</span>
+                        </a>
+                        <div class="user-dropdown-divider"></div>
+                        <button class="user-dropdown-item logout-item" id="logout-btn">
+                            <span class="item-icon">🚪</span>
+                            <span>Odjava</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="app">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>⚙️ Postavke</h2>
+                    <p>Prilagodite aplikaciju prema svojim potrebama</p>
+                </div>
+
+                <!-- Jezik Aplikacije -->
+                <div class="settings-section">
+                    <h3>🌐 Jezik Aplikacije</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Odaberite jezik sučelja
+                    </p>
+                    <div class="settings-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                        <div class="theme-preview language-option" data-lang="hr">
+                            <div class="theme-preview-icon">🇭🇷</div>
+                            <div style="font-weight: 600;">Hrvatski</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Croatian</div>
+                        </div>
+                        <div class="theme-preview language-option" data-lang="en">
+                            <div class="theme-preview-icon">🇺🇸</div>
+                            <div style="font-weight: 600;">English</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Engleski</div>
+                        </div>
+                        <div class="theme-preview language-option" data-lang="de">
+                            <div class="theme-preview-icon">🇩🇪</div>
+                            <div style="font-weight: 600;">Deutsch</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Njemački</div>
+                        </div>
+                        <div class="theme-preview language-option" data-lang="es">
+                            <div class="theme-preview-icon">🇪🇸</div>
+                            <div style="font-weight: 600;">Español</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Španjolski</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tema Aplikacije -->
+                <div class="settings-section">
+                    <h3>🎨 Tema Aplikacije</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Odaberite temu koja vam najbolje odgovara
+                    </p>
+                    <div class="settings-grid">
+                        <div class="theme-preview" data-theme="light">
+                            <div class="theme-preview-icon">☀️</div>
+                            <div style="font-weight: 600;">Svijetla</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Klasična tema</div>
+                        </div>
+                        <div class="theme-preview" data-theme="dark">
+                            <div class="theme-preview-icon">🌙</div>
+                            <div style="font-weight: 600;">Tamna</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Tamni način rada</div>
+                        </div>
+                        <div class="theme-preview" data-theme="blue">
+                            <div class="theme-preview-icon">🌊</div>
+                            <div style="font-weight: 600;">Plavi Ocean</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Mirna plava</div>
+                        </div>
+                        <div class="theme-preview" data-theme="purple">
+                            <div class="theme-preview-icon">💜</div>
+                            <div style="font-weight: 600;">Ljubičasti San</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Elegantna</div>
+                        </div>
+                        <div class="theme-preview" data-theme="green">
+                            <div class="theme-preview-icon">🌲</div>
+                            <div style="font-weight: 600;">Zelena Šuma</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Prirodna</div>
+                        </div>
+                        <div class="theme-preview" data-theme="sunset">
+                            <div class="theme-preview-icon">🌅</div>
+                            <div style="font-weight: 600;">Zalazak Sunca</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Topla</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dizajn Figura -->
+                <div class="settings-section">
+                    <h3>♟️ Dizajn Figura</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Odaberite stil šahovskih figura
+                    </p>
+                    <div class="settings-grid">
+                        <div class="chess-style-preview" data-piece-style="classic">
+                            <div class="piece-examples">♔ ♕ ♖ ♗ ♘ ♙</div>
+                            <div style="font-weight: 600;">Klasične</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Standardne Unicode</div>
+                        </div>
+                        <div class="chess-style-preview" data-piece-style="modern">
+                            <div class="piece-examples">♚ ♛ ♜ ♝ ♞ ♟</div>
+                            <div style="font-weight: 600;">Moderne</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Savremene figure</div>
+                        </div>
+                        <div class="chess-style-preview" data-piece-style="bold">
+                            <div class="piece-examples" style="font-weight: 900;">♔ ♕ ♖ ♗ ♘ ♙</div>
+                            <div style="font-weight: 600;">Bold</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Debele figure</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dizajn Šahovske Ploče -->
+                <div class="settings-section">
+                    <h3>🎲 Dizajn Šahovske Ploče</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Odaberite boje šahovske ploče
+                    </p>
+                    <div class="settings-grid">
+                        <div class="chess-style-preview" data-board-style="classic">
+                            <div class="chess-board-mini">
+                                <div class="chess-square" style="background: #f0d9b5;"></div>
+                                <div class="chess-square" style="background: #b58863;"></div>
+                                <div class="chess-square" style="background: #f0d9b5;"></div>
+                                <div class="chess-square" style="background: #b58863;"></div>
+                                <div class="chess-square" style="background: #b58863;"></div>
+                                <div class="chess-square" style="background: #f0d9b5;"></div>
+                                <div class="chess-square" style="background: #b58863;"></div>
+                                <div class="chess-square" style="background: #f0d9b5;"></div>
+                                <div class="chess-square" style="background: #f0d9b5;"></div>
+                                <div class="chess-square" style="background: #b58863;"></div>
+                                <div class="chess-square" style="background: #f0d9b5;"></div>
+                                <div class="chess-square" style="background: #b58863;"></div>
+                                <div class="chess-square" style="background: #b58863;"></div>
+                                <div class="chess-square" style="background: #f0d9b5;"></div>
+                                <div class="chess-square" style="background: #b58863;"></div>
+                                <div class="chess-square" style="background: #f0d9b5;"></div>
+                            </div>
+                            <div style="font-weight: 600;">Klasična</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Smeđa & bež</div>
+                        </div>
+                        <div class="chess-style-preview" data-board-style="wood">
+                            <div class="chess-board-mini">
+                                <div class="chess-square" style="background: #f4e5d3;"></div>
+                                <div class="chess-square" style="background: #8b4513;"></div>
+                                <div class="chess-square" style="background: #f4e5d3;"></div>
+                                <div class="chess-square" style="background: #8b4513;"></div>
+                                <div class="chess-square" style="background: #8b4513;"></div>
+                                <div class="chess-square" style="background: #f4e5d3;"></div>
+                                <div class="chess-square" style="background: #8b4513;"></div>
+                                <div class="chess-square" style="background: #f4e5d3;"></div>
+                                <div class="chess-square" style="background: #f4e5d3;"></div>
+                                <div class="chess-square" style="background: #8b4513;"></div>
+                                <div class="chess-square" style="background: #f4e5d3;"></div>
+                                <div class="chess-square" style="background: #8b4513;"></div>
+                                <div class="chess-square" style="background: #8b4513;"></div>
+                                <div class="chess-square" style="background: #f4e5d3;"></div>
+                                <div class="chess-square" style="background: #8b4513;"></div>
+                                <div class="chess-square" style="background: #f4e5d3;"></div>
+                            </div>
+                            <div style="font-weight: 600;">Drvo</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Tamno drvo</div>
+                        </div>
+                        <div class="chess-style-preview" data-board-style="green">
+                            <div class="chess-board-mini">
+                                <div class="chess-square" style="background: #ffffdd;"></div>
+                                <div class="chess-square" style="background: #86a666;"></div>
+                                <div class="chess-square" style="background: #ffffdd;"></div>
+                                <div class="chess-square" style="background: #86a666;"></div>
+                                <div class="chess-square" style="background: #86a666;"></div>
+                                <div class="chess-square" style="background: #ffffdd;"></div>
+                                <div class="chess-square" style="background: #86a666;"></div>
+                                <div class="chess-square" style="background: #ffffdd;"></div>
+                                <div class="chess-square" style="background: #ffffdd;"></div>
+                                <div class="chess-square" style="background: #86a666;"></div>
+                                <div class="chess-square" style="background: #ffffdd;"></div>
+                                <div class="chess-square" style="background: #86a666;"></div>
+                                <div class="chess-square" style="background: #86a666;"></div>
+                                <div class="chess-square" style="background: #ffffdd;"></div>
+                                <div class="chess-square" style="background: #86a666;"></div>
+                                <div class="chess-square" style="background: #ffffdd;"></div>
+                            </div>
+                            <div style="font-weight: 600;">Zelena</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Turnirska</div>
+                        </div>
+                        <div class="chess-style-preview" data-board-style="blue">
+                            <div class="chess-board-mini">
+                                <div class="chess-square" style="background: #dee3e6;"></div>
+                                <div class="chess-square" style="background: #8ca2ad;"></div>
+                                <div class="chess-square" style="background: #dee3e6;"></div>
+                                <div class="chess-square" style="background: #8ca2ad;"></div>
+                                <div class="chess-square" style="background: #8ca2ad;"></div>
+                                <div class="chess-square" style="background: #dee3e6;"></div>
+                                <div class="chess-square" style="background: #8ca2ad;"></div>
+                                <div class="chess-square" style="background: #dee3e6;"></div>
+                                <div class="chess-square" style="background: #dee3e6;"></div>
+                                <div class="chess-square" style="background: #8ca2ad;"></div>
+                                <div class="chess-square" style="background: #dee3e6;"></div>
+                                <div class="chess-square" style="background: #8ca2ad;"></div>
+                                <div class="chess-square" style="background: #8ca2ad;"></div>
+                                <div class="chess-square" style="background: #dee3e6;"></div>
+                                <div class="chess-square" style="background: #8ca2ad;"></div>
+                                <div class="chess-square" style="background: #dee3e6;"></div>
+                            </div>
+                            <div style="font-weight: 600;">Plava</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Moderna</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Izgled Sučelja -->
+                <div class="settings-section">
+                    <h3>🖥️ <span data-i18n="settings.interface">Izgled Sučelja</span></h3>
+                    <div class="form-group">
+                        <label data-i18n="settings.tabsPosition">Pozicija navigacijskih tabova</label>
+                        <select class="form-control" id="tabs-position">
+                            <option value="top" data-i18n="settings.tabsPosition.top">Gore (horizontalno)</option>
+                            <option value="left" data-i18n="settings.tabsPosition.left">Lijevo (vertikalno)</option>
+                        </select>
+                        <small style="color: var(--text-secondary); display: block; margin-top: 0.5rem;" data-i18n="settings.tabsPosition.hint">Odaberite gdje želite da se prikazuju navigacijski tabovi</small>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div style="font-weight: 600;" data-i18n="settings.compactMode">Kompaktni prikaz</div>
+                            <div class="setting-description" data-i18n="settings.compactMode.desc">Smanji razmake između elemenata</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="compact-mode">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Obavijesti -->
+                <div class="settings-section">
+                    <h3>🔔 <span data-i18n="settings.notifications">Obavijesti</span></h3>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div style="font-weight: 600;" data-i18n="settings.emailNotifications">Notifikacije na email</div>
+                            <div class="setting-description" data-i18n="settings.emailNotifications.desc">Primaj obavijesti o novim turnirima na email</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="email-notifications" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div style="font-weight: 600;" data-i18n="settings.pushNotifications">Push obavijesti</div>
+                            <div class="setting-description" data-i18n="settings.pushNotifications.desc">Prikazuj obavijesti u pregledniku</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="push-notifications" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div style="font-weight: 600;" data-i18n="settings.soundNotifications">Zvučne notifikacije</div>
+                            <div class="setting-description" data-i18n="settings.soundNotifications.desc">Reproduciraj zvuk pri novim partijama</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sound-notifications">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Privatnost -->
+                <div class="settings-section">
+                    <h3>🔒 Privatnost</h3>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div style="font-weight: 600;">Javni profil</div>
+                            <div class="setting-description">Drugi igrači mogu vidjeti tvoj profil</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="public-profile" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div style="font-weight: 600;">Prikaži online status</div>
+                            <div class="setting-description">Drugi mogu vidjeti kada si online</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="show-online">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div style="font-weight: 600;">Prikaži rating</div>
+                            <div class="setting-description">Tvoj ELO rating je vidljiv drugima</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="show-rating" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Igra -->
+                <div class="settings-section">
+                    <h3>♟️ Postavke Igre</h3>
+                    <div class="form-group">
+                        <label>Auto-promjena kraljice</label>
+                        <select class="form-control" id="auto-queen">
+                            <option value="always">Uvijek</option>
+                            <option value="ask">Pitaj</option>
+                            <option value="never">Nikad</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Prikaži legalne poteze</label>
+                        <select class="form-control" id="show-legal">
+                            <option value="always">Uvijek</option>
+                            <option value="hover">Pri hoveru</option>
+                            <option value="never">Nikad</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div style="font-weight: 600;">Potvrda poteza</div>
+                            <div class="setting-description">Zatraži potvrdu prije slanja poteza</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="confirm-move">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <div style="font-weight: 600;">Animacije figura</div>
+                            <div class="setting-description">Animiraj kretanje figura</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="animate-pieces" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Promjena lozinke -->
+                <div class="settings-section">
+                    <h3>🔑 <span data-i18n="settings.changePassword">Promjena lozinke</span></h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;" data-i18n="settings.changePassword.desc">
+                        Promijenite lozinku svog računa
+                    </p>
+                    <button type="button" class="btn btn-primary" id="change-password-btn" style="min-width: 200px;">
+                        🔑 <span data-i18n="settings.changePassword.btn">Promijeni lozinku</span>
+                    </button>
+                </div>
+
+                <!-- Change Password Modal -->
+                <div id="change-password-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: center;">
+                    <div style="background: var(--bg-card); border-radius: 12px; padding: 2rem; max-width: 400px; width: 90%; margin: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <h3 style="color: var(--text-primary); margin-top: 0;">🔑 <span data-i18n="settings.changePassword">Promjena lozinke</span></h3>
+                        <form id="change-password-form">
+                            <div class="form-group">
+                                <label for="current-password" data-i18n="settings.changePassword.current">Trenutna lozinka</label>
+                                <input type="password" id="current-password" class="form-control" data-i18n-placeholder="settings.changePassword.currentPlaceholder" placeholder="Unesite trenutnu lozinku" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password-input" data-i18n="settings.changePassword.new">Nova lozinka</label>
+                                <input type="password" id="new-password-input" class="form-control" data-i18n-placeholder="settings.changePassword.newPlaceholder" placeholder="Unesite novu lozinku (min. 6 znakova)" minlength="6" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-new-password" data-i18n="settings.changePassword.confirm">Potvrdite novu lozinku</label>
+                                <input type="password" id="confirm-new-password" class="form-control" data-i18n-placeholder="settings.changePassword.confirmPlaceholder" placeholder="Ponovite novu lozinku" minlength="6" required>
+                            </div>
+                            <div id="change-password-error" style="color: #dc3545; font-size: 0.9rem; margin-bottom: 10px; display: none;"></div>
+                            <div id="change-password-success" style="color: #28a745; font-size: 0.9rem; margin-bottom: 10px; display: none;"></div>
+                            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                                <button type="button" class="btn btn-secondary" id="cancel-change-password-btn" style="flex: 1;" data-i18n="settings.cancel">Odustani</button>
+                                <button type="submit" class="btn btn-primary" id="confirm-change-password-btn" style="flex: 1;" data-i18n="settings.changePassword.submit">Promijeni</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Brisanje računa -->
+                <div class="settings-section" style="border-top: 2px solid #dc3545; padding-top: 2rem; margin-top: 2rem;">
+                    <h3 style="color: #dc3545;">⚠️ <span data-i18n="settings.dangerZone">Zona opasnosti</span></h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;" data-i18n="settings.dangerZone.desc">
+                        Jednom kada izbrišete svoj račun, nema povratka. Svi vaši podaci će biti trajno izbrisani.
+                    </p>
+                    <button type="button" class="btn" id="delete-account-btn" style="background: #dc3545; color: white; border: none;">
+                        🗑️ <span data-i18n="settings.deleteAccount">Izbriši moj račun</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="delete-account-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: var(--bg-card); border-radius: 12px; padding: 2rem; max-width: 400px; width: 90%; margin: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <h3 style="color: #dc3545; margin-top: 0;">⚠️ <span data-i18n="settings.deleteAccount.title">Potvrda brisanja računa</span></h3>
+            <p style="color: var(--text-secondary);" data-i18n="settings.deleteAccount.confirm">
+                Jeste li sigurni da želite trajno izbrisati svoj račun? Ova radnja se ne može poništiti.
+            </p>
+            <div class="form-group">
+                <label for="delete-password" data-i18n="settings.deleteAccount.passwordLabel">Unesite lozinku za potvrdu:</label>
+                <input type="password" id="delete-password" class="form-control" data-i18n-placeholder="settings.deleteAccount.passwordPlaceholder" placeholder="Vaša lozinka" required>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="button" class="btn btn-secondary" id="cancel-delete-btn" style="flex: 1;" data-i18n="settings.cancel">Odustani</button>
+                <button type="button" class="btn" id="confirm-delete-btn" style="flex: 1; background: #dc3545; color: white; border: none;" data-i18n="settings.deleteAccount.submit">Izbriši račun</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/theme.js?v=3"></script>
+    <script type="module" src="js/i18n.js?v=1"></script>
+    <script type="module" src="js/notifications.js?v=1"></script>
+    <script type="module" src="js/userDropdown.js?v=3"></script>
+    <script>
+        // Check if localStorage is available
+        function isLocalStorageAvailable() {
+            try {
+                const test = '__localStorage_test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch(e) {
+                console.error('❌ localStorage nije dostupan:', e);
+                return false;
+            }
+        }
+        
+        if (!isLocalStorageAvailable()) {
+            alert('⚠️ Vaš preglednik ne podržava localStorage ili je onemogućen. Postavke neće biti spremljene.');
+        }
+        
+        // Auto-save toast notification
+        function showAutoSaveToast(message = 'Spremljeno ✓') {
+            // Create toast if it doesn't exist
+            let toast = document.querySelector('.auto-save-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.className = 'auto-save-toast';
+                document.body.appendChild(toast);
+            }
+            
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Load saved settings
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('=== Settings page loaded ===');
+            console.log('Loading saved settings...');
+            loadSettings();
+            console.log('Applying board and piece styles...');
+            applyBoardAndPieceStyles();
+            console.log('Setting up auto-save...');
+            setupAutoSave();
+            console.log('=== Setup complete ===');
+            
+            // Language selection - find language section
+            const languageSection = document.querySelector('.settings-section');
+            if (languageSection && !languageSection.dataset.langListenerAdded) {
+                languageSection.addEventListener('click', (e) => {
+                    const langOption = e.target.closest('.language-option');
+                    if (langOption && langOption.dataset.lang) {
+                        const lang = langOption.dataset.lang;
+                        console.log('🌐 Kliknuto na jezik:', lang);
+                        
+                        localStorage.setItem('cotisa-language', lang);
+                        document.documentElement.setAttribute('lang', lang);
+                        
+                        const saved = localStorage.getItem('cotisa-language');
+                        console.log('✅ Jezik spremljen u localStorage:', saved);
+                        
+                        document.querySelectorAll('.language-option').forEach(p => p.classList.remove('active'));
+                        langOption.classList.add('active');
+                        
+                        // Poziv i18n sustava za ažuriranje prijevoda
+                        if (window.i18n) {
+                            window.i18n.setLanguage(lang);
+                            window.i18n.translateStaticPage();
+                            console.log('🔄 i18n jezik postavljen na:', lang);
+                        }
+                        
+                        // Prikaži poruku na odabranom jeziku
+                        const savedMsgs = {
+                            'hr': 'Jezik spremljen ✓',
+                            'en': 'Language saved ✓',
+                            'de': 'Sprache gespeichert ✓',
+                            'es': 'Idioma guardado ✓'
+                        };
+                        showAutoSaveToast(savedMsgs[lang] || savedMsgs['hr']);
+                    }
+                });
+                languageSection.dataset.langListenerAdded = 'true';
+            }
+            
+            // Mark active language
+            const currentLang = localStorage.getItem('cotisa-language') || 'hr';
+            document.querySelectorAll('.language-option').forEach(p => {
+                p.classList.remove('active');
+                if (p.dataset.lang === currentLang) {
+                    p.classList.add('active');
+                    console.log('✅ Aktiviran jezik:', currentLang);
+                }
+            });
+            
+            // Translate page on load - wait for i18n module to load
+            // (using currentLang from above)
+            
+            // Try to translate with delay since i18n loads as module
+            function tryTranslate() {
+                if (window.i18n && currentLang !== 'hr') {
+                    window.i18n.translateStaticPage();
+                    window.i18n.updateNavigation();
+                    console.log('✅ Stranica prevedena na:', currentLang);
+                }
+            }
+            
+            // Immediate try
+            tryTranslate();
+            // Retry after module loads
+            setTimeout(tryTranslate, 100);
+            setTimeout(tryTranslate, 300);
+            setTimeout(tryTranslate, 500);
+            
+            // Theme preview clicks - use event delegation (second section now)
+            const themeContainer = document.querySelectorAll('.settings-section')[1];
+            if (themeContainer && !themeContainer.dataset.themeListenerAdded) {
+                themeContainer.addEventListener('click', (e) => {
+                    const preview = e.target.closest('.theme-preview:not(.language-option)');
+                    if (preview && preview.dataset.theme) {
+                        const theme = preview.dataset.theme;
+                        console.log('🎨 Kliknuto na temu:', theme);
+                        
+                        // Direct save to localStorage
+                        localStorage.setItem('cotisa-theme', theme);
+                        document.documentElement.setAttribute('data-theme', theme);
+                        document.body.setAttribute('data-theme', theme);
+                        
+                        // Also use themeManager if available
+                        if (window.themeManager) {
+                            window.themeManager.applyTheme(theme);
+                        }
+                        
+                        // Force browser to recalculate all CSS variables
+                        document.body.style.display = 'none';
+                        document.body.offsetHeight; // Trigger reflow
+                        document.body.style.display = '';
+                        
+                        // Verify save
+                        const saved = localStorage.getItem('cotisa-theme');
+                        console.log('✅ Tema spremljena u localStorage:', saved);
+                        
+                        document.querySelectorAll('.theme-preview:not(.language-option)').forEach(p => p.classList.remove('active'));
+                        preview.classList.add('active');
+                        
+                        showAutoSaveToast();
+                    }
+                });
+                themeContainer.dataset.themeListenerAdded = 'true';
+            }
+            
+            // Piece style clicks - use event delegation
+            const pieceSection = document.querySelectorAll('.settings-section')[2]; // Third section (after language and theme)
+            if (pieceSection && !pieceSection.dataset.pieceListenerAdded) {
+                pieceSection.addEventListener('click', (e) => {
+                    const preview = e.target.closest('[data-piece-style]');
+                    if (preview && preview.dataset.pieceStyle) {
+                        const style = preview.dataset.pieceStyle;
+                        console.log('🖌️ Kliknuto na stil figura:', style);
+                        
+                        localStorage.setItem('chess-piece-style', style);
+                        document.body.setAttribute('data-piece-style', style);
+                        document.documentElement.setAttribute('data-piece-style', style);
+                        
+                        const saved = localStorage.getItem('chess-piece-style');
+                        console.log('✅ Spremljeno u localStorage:', saved);
+                        
+                        document.querySelectorAll('[data-piece-style]').forEach(p => p.classList.remove('active'));
+                        preview.classList.add('active');
+                        
+                        showAutoSaveToast();
+                    }
+                });
+                pieceSection.dataset.pieceListenerAdded = 'true';
+            }
+            
+            // Board style clicks - use event delegation
+            const boardSection = document.querySelectorAll('.settings-section')[3]; // Fourth section
+            if (boardSection && !boardSection.dataset.boardListenerAdded) {
+                boardSection.addEventListener('click', (e) => {
+                    const preview = e.target.closest('[data-board-style]');
+                    if (preview && preview.dataset.boardStyle) {
+                        const style = preview.dataset.boardStyle;
+                        console.log('🔲 Kliknuto na stil ploče:', style);
+                        
+                        localStorage.setItem('chess-board-style', style);
+                        document.body.setAttribute('data-board-style', style);
+                        document.documentElement.setAttribute('data-board-style', style);
+                        
+                        const saved = localStorage.getItem('chess-board-style');
+                        console.log('✅ Spremljeno u localStorage:', saved);
+                        
+                        document.querySelectorAll('[data-board-style]').forEach(p => p.classList.remove('active'));
+                        preview.classList.add('active');
+                        
+                        showAutoSaveToast();
+                    }
+                });
+                boardSection.dataset.boardListenerAdded = 'true';
+            }
+            
+            // Mark active theme
+            const currentTheme = localStorage.getItem('cotisa-theme') || 'light';
+            console.log('🎨 Trenutna tema iz localStorage:', currentTheme);
+            document.querySelectorAll('.theme-preview:not(.language-option)').forEach(p => {
+                p.classList.remove('active');
+                if (p.dataset.theme === currentTheme) {
+                    p.classList.add('active');
+                    console.log('✅ Aktivirana tema preview:', currentTheme);
+                }
+            });
+            
+            // Mark active piece style
+            const pieceStyle = localStorage.getItem('chess-piece-style') || 'classic';
+            console.log('♟️ Trenutni stil figura iz localStorage:', pieceStyle);
+            document.querySelectorAll('[data-piece-style]').forEach(p => {
+                p.classList.remove('active');
+                if (p.dataset.pieceStyle === pieceStyle) {
+                    p.classList.add('active');
+                    console.log('✅ Aktiviran stil figura preview:', pieceStyle);
+                }
+            });
+            
+            // Mark active board style
+            const boardStyle = localStorage.getItem('chess-board-style') || 'classic';
+            console.log('🔲 Trenutni stil ploče iz localStorage:', boardStyle);
+            document.querySelectorAll('[data-board-style]').forEach(p => {
+                p.classList.remove('active');
+                if (p.dataset.boardStyle === boardStyle) {
+                    p.classList.add('active');
+                    console.log('✅ Aktiviran stil ploče preview:', boardStyle);
+                }
+            });
+        });
+        
+        function loadSettings() {
+            // Helper function to get boolean from localStorage
+            function getBool(key, defaultValue = false) {
+                const value = localStorage.getItem(key);
+                if (value === null) return defaultValue;
+                return value === 'true';
+            }
+            
+            // Load checkbox values
+            const emailNotifications = document.getElementById('email-notifications');
+            const pushNotifications = document.getElementById('push-notifications');
+            const soundNotifications = document.getElementById('sound-notifications');
+            const publicProfile = document.getElementById('public-profile');
+            const showOnline = document.getElementById('show-online');
+            const showRating = document.getElementById('show-rating');
+            const confirmMove = document.getElementById('confirm-move');
+            const animatePieces = document.getElementById('animate-pieces');
+            
+            if (emailNotifications) emailNotifications.checked = getBool('email-notifications', true);
+            if (pushNotifications) pushNotifications.checked = getBool('push-notifications', true);
+            if (soundNotifications) soundNotifications.checked = getBool('sound-notifications', false);
+            if (publicProfile) publicProfile.checked = getBool('public-profile', true);
+            if (showOnline) showOnline.checked = getBool('show-online', false);
+            if (showRating) showRating.checked = getBool('show-rating', true);
+            if (confirmMove) confirmMove.checked = getBool('confirm-move', false);
+            if (animatePieces) animatePieces.checked = getBool('animate-pieces', true);
+            
+            // Load select values
+            const autoQueen = document.getElementById('auto-queen');
+            const showLegal = document.getElementById('show-legal');
+            const tabsPosition = document.getElementById('tabs-position');
+            const compactMode = document.getElementById('compact-mode');
+            
+            if (autoQueen) autoQueen.value = localStorage.getItem('auto-queen') || 'always';
+            if (showLegal) showLegal.value = localStorage.getItem('show-legal') || 'always';
+            if (tabsPosition) tabsPosition.value = localStorage.getItem('tabs-position') || 'top';
+            if (compactMode) compactMode.checked = getBool('compact-mode', false);
+        }
+        
+        function setupAutoSave() {
+            // Auto-save for checkboxes
+            const checkboxes = [
+                'email-notifications',
+                'push-notifications', 
+                'sound-notifications',
+                'public-profile',
+                'show-online',
+                'show-rating',
+                'confirm-move',
+                'animate-pieces'
+            ];
+            
+            checkboxes.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.addEventListener('change', () => {
+                        // Save as string 'true' or 'false'
+                        const value = checkbox.checked.toString();
+                        localStorage.setItem(id, value);
+                        console.log(`✅ Spremljeno: ${id} = ${value}`);
+                        
+                        // Verify it was saved
+                        const saved = localStorage.getItem(id);
+                        console.log(`✅ Provjera: ${id} iz localStorage = ${saved}`);
+                        
+                        showAutoSaveToast();
+                    });
+                } else {
+                    console.warn(`⚠️ Element ne postoji: ${id}`);
+                }
+            });
+            
+            // Auto-save for select dropdowns
+            const selects = ['auto-queen', 'show-legal', 'tabs-position'];
+            selects.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    select.addEventListener('change', () => {
+                        localStorage.setItem(id, select.value);
+                        console.log(`Saved ${id}: ${select.value}`);
+                        
+                        // Apply tabs position immediately
+                        if (id === 'tabs-position') {
+                            applyTabsPosition(select.value);
+                        }
+                        
+                        showAutoSaveToast();
+                    });
+                }
+            });
+            
+            // Auto-save for compact mode
+            const compactMode = document.getElementById('compact-mode');
+            if (compactMode) {
+                compactMode.addEventListener('change', () => {
+                    localStorage.setItem('compact-mode', compactMode.checked.toString());
+                    document.body.classList.toggle('compact-mode', compactMode.checked);
+                    showAutoSaveToast();
+                });
+            }
+        }
+        
+        function applyTabsPosition(position) {
+            // This will be applied on main pages
+            document.body.setAttribute('data-tabs-position', position);
+            localStorage.setItem('tabs-position', position);
+            console.log('📍 Tabs position set to:', position);
+        }
+        
+        function applyBoardAndPieceStyles() {
+            const boardStyle = localStorage.getItem('chess-board-style') || 'classic';
+            const pieceStyle = localStorage.getItem('chess-piece-style') || 'classic';
+            
+            console.log('🎨 applyBoardAndPieceStyles() - Primjena:', { boardStyle, pieceStyle });
+            
+            // Apply to both body and documentElement
+            document.body.setAttribute('data-board-style', boardStyle);
+            document.body.setAttribute('data-piece-style', pieceStyle);
+            document.documentElement.setAttribute('data-board-style', boardStyle);
+            document.documentElement.setAttribute('data-piece-style', pieceStyle);
+            
+            console.log('✅ Atributi postavljeni na body i html element');
+        }
+        
+        // Standalone notification handler for subpages
+        (function() {
+            const bell = document.getElementById('notification-bell');
+            const dropdown = document.getElementById('notifications-dropdown');
+            const notifList = document.getElementById('notifications-list');
+            const markAllBtn = document.getElementById('mark-all-read');
+            const badge = document.getElementById('notification-badge');
+            let isOpen = false;
+            
+            if (bell && dropdown) {
+                bell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    isOpen = !isOpen;
+                    dropdown.style.display = isOpen ? 'block' : 'none';
+                    if (isOpen) loadNotifications();
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (isOpen && !dropdown.contains(e.target)) {
+                        isOpen = false;
+                        dropdown.style.display = 'none';
+                    }
+                });
+            }
+            
+            async function loadNotifications() {
+                const token = localStorage.getItem('access_token');
+                if (!token) return;
+                try {
+                    const response = await fetch('/api/notifications/', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        renderNotifications(data.results || data);
+                    }
+                } catch (err) {
+                    console.log('Notifications fetch failed:', err);
+                }
+            }
+            
+            function renderNotifications(notifications) {
+                if (!notifList) return;
+                const lang = localStorage.getItem('cotisa-language') || 'hr';
+                const emptyTexts = { hr: 'Nema novih obavijesti', en: 'No new notifications', de: 'Keine neuen Benachrichtigungen', es: 'No hay nuevas notificaciones' };
+                
+                if (!notifications || notifications.length === 0) {
+                    notifList.innerHTML = '<div class="notification-empty"><p>' + emptyTexts[lang] + '</p></div>';
+                    if (badge) badge.style.display = 'none';
+                    return;
+                }
+                
+                const unread = notifications.filter(n => !n.is_read);
+                if (badge) {
+                    badge.textContent = unread.length;
+                    badge.style.display = unread.length > 0 ? '' : 'none';
+                }
+                
+                notifList.innerHTML = notifications.slice(0, 10).map(n => 
+                    '<div class="notification-item ' + (n.is_read ? '' : 'unread') + '" data-id="' + n.id + '">' +
+                    '<div class="notification-message">' + n.message + '</div>' +
+                    '<div class="notification-time">' + new Date(n.created_at).toLocaleString() + '</div>' +
+                    '</div>'
+                ).join('');
+            }
+            
+            if (markAllBtn) {
+                markAllBtn.addEventListener('click', async () => {
+                    const token = localStorage.getItem('access_token');
+                    if (!token) return;
+                    try {
+                        await fetch('/api/notifications/mark-all-read/', {
+                            method: 'POST',
+                            headers: { 'Authorization': 'Bearer ' + token }
+                        });
+                        loadNotifications();
+                    } catch (err) {}
+                });
+            }
+            
+            // Load on page load
+            loadNotifications();
+        })();
+        
+        // Translate page on load
+        function translatePage() {
+            if (window.i18n) {
+                window.i18n.updateNavigation();
+                window.i18n.updatePageTranslations();
+            }
+        }
+        setTimeout(translatePage, 100);
+        setTimeout(translatePage, 300);
+        
+        // Direct logout handler - guaranteed to work
+        (function() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🚪 LOGOUT clicked - clearing session...');
+                    
+                    // Clear ALL authentication data
+                    localStorage.removeItem('cotisa_user');
+                    localStorage.removeItem('cotisa_session');
+                    localStorage.removeItem('cotisa_auth_token');
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('refresh_token');
+                    
+                    // Clear session storage too
+                    sessionStorage.clear();
+                    
+                    console.log('✅ Session cleared, redirecting...');
+                    
+                    // Force redirect
+                    window.location.replace('index.html#/login');
+                    return false;
+                };
+                console.log('✅ Logout handler attached to button');
+            } else {
+                console.warn('⚠️ Logout button not found');
+            }
+        })();
+        
+        // Change password handler
+        (function() {
+            const changePasswordBtn = document.getElementById('change-password-btn');
+            const changePasswordModal = document.getElementById('change-password-modal');
+            const cancelChangePasswordBtn = document.getElementById('cancel-change-password-btn');
+            const changePasswordForm = document.getElementById('change-password-form');
+            
+            if (changePasswordBtn && changePasswordModal) {
+                // Open modal
+                changePasswordBtn.addEventListener('click', () => {
+                    changePasswordModal.style.display = 'flex';
+                    document.getElementById('current-password').value = '';
+                    document.getElementById('new-password-input').value = '';
+                    document.getElementById('confirm-new-password').value = '';
+                    document.getElementById('change-password-error').style.display = 'none';
+                    document.getElementById('change-password-success').style.display = 'none';
+                    document.getElementById('confirm-change-password-btn').disabled = false;
+                    document.getElementById('confirm-change-password-btn').textContent = 'Promijeni';
+                    document.getElementById('current-password').focus();
+                });
+                
+                // Close modal
+                cancelChangePasswordBtn.addEventListener('click', () => {
+                    changePasswordModal.style.display = 'none';
+                });
+                
+                // Close on outside click
+                changePasswordModal.addEventListener('click', (e) => {
+                    if (e.target === changePasswordModal) {
+                        changePasswordModal.style.display = 'none';
+                    }
+                });
+                
+                // Form submission
+                changePasswordForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const currentPassword = document.getElementById('current-password').value;
+                    const newPassword = document.getElementById('new-password-input').value;
+                    const confirmNewPassword = document.getElementById('confirm-new-password').value;
+                    const errorDiv = document.getElementById('change-password-error');
+                    const successDiv = document.getElementById('change-password-success');
+                    const submitBtn = document.getElementById('confirm-change-password-btn');
+                    
+                    errorDiv.style.display = 'none';
+                    successDiv.style.display = 'none';
+                    
+                    if (!currentPassword || !newPassword || !confirmNewPassword) {
+                        errorDiv.textContent = 'Sva polja su obavezna';
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    
+                    if (newPassword.length < 6) {
+                        errorDiv.textContent = 'Nova lozinka mora imati najmanje 6 znakova';
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    
+                    if (newPassword !== confirmNewPassword) {
+                        errorDiv.textContent = 'Nove lozinke se ne podudaraju';
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Mijenjanje...';
+                    
+                    try {
+                        const authToken = localStorage.getItem('cotisa_auth_token');
+                        const response = await fetch('/api/change-password/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Auth-Token': authToken
+                            },
+                            body: JSON.stringify({
+                                current_password: currentPassword,
+                                new_password: newPassword,
+                                new_password_confirm: confirmNewPassword
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok && data.success) {
+                            successDiv.textContent = data.message || 'Lozinka uspješno promijenjena!';
+                            successDiv.style.display = 'block';
+                            showAutoSaveToast('Lozinka promijenjena ✓');
+                            
+                            // Close modal after delay
+                            setTimeout(() => {
+                                changePasswordModal.style.display = 'none';
+                            }, 2000);
+                        } else {
+                            errorDiv.textContent = data.error || 'Greška pri promjeni lozinke';
+                            errorDiv.style.display = 'block';
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Promijeni';
+                        }
+                    } catch (error) {
+                        console.error('Change password error:', error);
+                        errorDiv.textContent = 'Greška pri povezivanju s poslužiteljem';
+                        errorDiv.style.display = 'block';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Promijeni';
+                    }
+                });
+                
+                console.log('✅ Change password handler attached');
+            }
+        })();
+        
+        // Delete account handler
+        (function() {
+            const deleteAccountBtn = document.getElementById('delete-account-btn');
+            const deleteModal = document.getElementById('delete-account-modal');
+            const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+            const deletePasswordInput = document.getElementById('delete-password');
+            
+            if (deleteAccountBtn && deleteModal) {
+                // Open modal
+                deleteAccountBtn.addEventListener('click', () => {
+                    deleteModal.style.display = 'flex';
+                    deletePasswordInput.value = '';
+                    deletePasswordInput.focus();
+                });
+                
+                // Close modal
+                cancelDeleteBtn.addEventListener('click', () => {
+                    deleteModal.style.display = 'none';
+                });
+                
+                // Close on outside click
+                deleteModal.addEventListener('click', (e) => {
+                    if (e.target === deleteModal) {
+                        deleteModal.style.display = 'none';
+                    }
+                });
+                
+                // Confirm delete
+                confirmDeleteBtn.addEventListener('click', async () => {
+                    const password = deletePasswordInput.value;
+                    if (!password) {
+                        alert('Unesite lozinku za potvrdu brisanja računa.');
+                        return;
+                    }
+                    
+                    confirmDeleteBtn.disabled = true;
+                    confirmDeleteBtn.textContent = 'Brisanje...';
+                    
+                    try {
+                        const authToken = localStorage.getItem('cotisa_auth_token');
+                        const response = await fetch('/api/delete-account/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Auth-Token': authToken
+                            },
+                            body: JSON.stringify({ password: password })
+                        });
+                        
+                        // Check if response is JSON before parsing
+                        const contentType = response.headers.get('content-type');
+                        if (!contentType || !contentType.includes('application/json')) {
+                            throw new Error('Server nije vratio JSON odgovor. Status: ' + response.status);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok && data.success) {
+                            // Clear all local data
+                            localStorage.removeItem('cotisa_user');
+                            localStorage.removeItem('cotisa_session');
+                            localStorage.removeItem('cotisa_auth_token');
+                            localStorage.removeItem('access_token');
+                            localStorage.removeItem('refresh_token');
+                            sessionStorage.clear();
+                            
+                            alert('Vaš račun je uspješno izbrisan. Hvala što ste koristili COTISA.');
+                            window.location.replace('index.html#/login');
+                        } else {
+                            alert(data.error || 'Greška pri brisanju računa.');
+                            confirmDeleteBtn.disabled = false;
+                            confirmDeleteBtn.textContent = 'Izbriši račun';
+                        }
+                    } catch (error) {
+                        console.error('Delete account error:', error);
+                        alert(error.message || 'Greška pri brisanju računa. Pokušajte ponovno.');
+                        confirmDeleteBtn.disabled = false;
+                        confirmDeleteBtn.textContent = 'Izbriši račun';
+                    }
+                });
+                
+                console.log('✅ Delete account handler attached');
+            }
+        })();
+    </script>
+</body>
+</html>

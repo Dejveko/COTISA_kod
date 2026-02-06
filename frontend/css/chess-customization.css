@@ -1,0 +1,111 @@
+/* Chess Board Styles */
+
+/* Board Style Variables */
+:root {
+    /* Default - Classic */
+    --board-light: #f0d9b5;
+    --board-dark: #b58863;
+}
+
+[data-board-style="classic"] {
+    --board-light: #f0d9b5;
+    --board-dark: #b58863;
+}
+
+[data-board-style="wood"] {
+    --board-light: #f4e5d3;
+    --board-dark: #8b4513;
+}
+
+[data-board-style="green"] {
+    --board-light: #ffffdd;
+    --board-dark: #86a666;
+}
+
+[data-board-style="blue"] {
+    --board-light: #dee3e6;
+    --board-dark: #8ca2ad;
+}
+
+/* Apply board colors to chess squares */
+.chess-board .light-square,
+.square.light {
+    background-color: var(--board-light) !important;
+}
+
+.chess-board .dark-square,
+.square.dark {
+    background-color: var(--board-dark) !important;
+}
+
+/* Piece Style Variables */
+[data-piece-style="classic"] .chess-piece {
+    font-weight: 400;
+    font-size: inherit;
+}
+
+[data-piece-style="modern"] .chess-piece {
+    font-weight: 400;
+    font-size: inherit;
+    font-family: 'Segoe UI Symbol', 'Symbola', sans-serif;
+}
+
+[data-piece-style="bold"] .chess-piece {
+    font-weight: 900;
+    font-size: inherit;
+}
+
+/* Active player indicator based on theme */
+.player-card.active,
+.player-info.active {
+    border-color: var(--active-player-color);
+    border-width: 3px;
+    box-shadow: 0 0 20px var(--active-player-glow);
+    position: relative;
+}
+
+.player-card.active::before,
+.player-info.active::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border: 2px solid var(--active-player-color);
+    border-radius: inherit;
+    opacity: 0.5;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.02);
+        opacity: 0.8;
+    }
+}
+
+/* Turn indicator */
+.turn-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--active-player-color);
+    box-shadow: 0 0 10px var(--active-player-glow);
+    animation: blink 1.5s ease-in-out infinite;
+    margin-left: 8px;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}

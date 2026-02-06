@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomoć - COTISA Pro</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="{% url 'index' %}" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;"><img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon" style="height: 32px;"> COTISA Pro</a></h1>
+            <div class="header-right">
+                <div class="icon-space">
+                    <i class="fas fa-chess-king"></i>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown()">☰</button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'index' %}"><i class="fas fa-home"></i> Početna</a>
+                        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profil</a>
+                        <a href="#" onclick="openSettingsFromNav(); return false;"><i class="fas fa-cog"></i> Postavke</a>
+                        <a href="{% url 'manage_tournaments' %}"><i class="fas fa-trophy"></i> Upravljanje Turnirima</a>
+                        <a href="{% url 'player_database' %}"><i class="fas fa-database"></i> Baza Igrača</a>
+                        <a href="{% url 'history' %}"><i class="fas fa-chart-bar"></i> Izvještaji i Statistike</a>
+                        <a href="{% url 'help' %}"><i class="fas fa-question-circle"></i> Pomoć</a>
+                        <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> O nama</a>
+                        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Odjava</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="help-container">
+                <nav class="help-nav">
+                    <h2>Quick Navigation</h2>
+                    <ul>
+                        <li><a href="#getting-started">Getting Started</a></li>
+                        <li><a href="#tournaments">Tournament Guide</a></li>
+                        <li><a href="#account">Account Management</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#contact">Contact Support</a></li>
+                    </ul>
+                </nav>
+
+                <div class="help-content">
+                    <section id="getting-started">
+                        <h2>Getting Started</h2>
+                        <h3>Welcome to Chess Tournament Manager!</h3>
+                        <p>Our platform makes it easy to participate in and organize chess tournaments. Here's how to get started:</p>
+                        
+                        <div class="help-steps">
+                            <div class="step">
+                                <h4>1. Complete Your Profile</h4>
+                                <p>Go to Profile settings and add your chess rating, preferred time controls, and contact information.</p>
+                            </div>
+                            <div class="step">
+                                <h4>2. Browse Tournaments</h4>
+                                <p>Use the "Join Tournament" feature to find tournaments that match your skill level and schedule.</p>
+                            </div>
+                            <div class="step">
+                                <h4>3. Register & Play</h4>
+                                <p>Register for tournaments and receive notifications about pairings and schedules.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="tournaments">
+                        <h2>Tournament Guide</h2>
+                        
+                        <h3>Joining Tournaments</h3>
+                        <ul>
+                            <li>Browse available tournaments by format, time control, and skill level</li>
+                            <li>Check tournament details including entry fee, prize pool, and schedule</li>
+                            <li>Register before the deadline</li>
+                            <li>Receive pairing notifications via email</li>
+                        </ul>
+
+                        <h3>Creating Tournaments</h3>
+                        <ul>
+                            <li>Set tournament format (Swiss, Round Robin, Knockout)</li>
+                            <li>Define time controls and increment settings</li>
+                            <li>Set player limits and entry requirements</li>
+                            <li>Configure prizes and entry fees</li>
+                            <li>Manage registrations and generate pairings</li>
+                        </ul>
+
+                        <h3>Tournament Management</h3>
+                        <ul>
+                            <li>Enter game results as they are completed</li>
+                            <li>Generate and publish standings</li>
+                            <li>Handle disputes and adjournments</li>
+                            <li>Distribute prizes and ratings updates</li>
+                        </ul>
+                    </section>
+
+                    <section id="account">
+                        <h2>Account Management</h2>
+                        
+                        <h3>Profile Settings</h3>
+                        <p>Keep your profile updated with current rating, contact information, and tournament preferences.</p>
+                        
+                        <h3>Privacy & Security</h3>
+                        <p>Control who can see your profile information and tournament history. Enable two-factor authentication for enhanced security.</p>
+                        
+                        <h3>Notifications</h3>
+                        <p>Customize email and push notifications for tournament updates, pairing announcements, and results.</p>
+                    </section>
+
+                    <section id="faq">
+                        <h2>Frequently Asked Questions</h2>
+                        
+                        <div class="faq-item">
+                            <h3>How do I join a tournament?</h3>
+                            <p>Click "Join Tournament" on the main page, browse available tournaments, and click "Register" for your chosen tournament before the deadline.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h3>Can I withdraw from a tournament?</h3>
+                            <p>Yes, you can withdraw before the first round begins. Go to your Tournament History and click "Withdraw" next to the tournament.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h3>How are pairings determined?</h3>
+                            <p>Pairings follow standard tournament rules (Swiss system by default) and are generated automatically by our system.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h3>What if I can't make my scheduled game?</h3>
+                            <p>Contact the tournament director immediately. Depending on the tournament rules, games may be rescheduled or result in a forfeit.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h3>How do I report a game result?</h3>
+                            <p>Both players can enter results through their tournament dashboard. Results are confirmed when both players agree or a tournament director verifies.</p>
+                        </div>
+                    </section>
+
+                    <section id="contact">
+                        <h2>Contact Support</h2>
+                        <p>Need additional help? Our support team is here to assist you:</p>
+                        
+                        <div class="contact-options">
+                            <div class="contact-method">
+                                <h3>📧 Email Support</h3>
+                                <p>support@chesstournamentmanager.com</p>
+                                <p>Response time: 24-48 hours</p>
+                            </div>
+                            
+                            <div class="contact-method">
+                                <h3>💬 Live Chat</h3>
+                                <p>Available Monday-Friday, 9 AM - 6 PM EST</p>
+                                <p>Click the chat icon in the bottom right corner</p>
+                            </div>
+                            
+                            <div class="contact-method">
+                                <h3>📚 Documentation</h3>
+                                <p>Visit our comprehensive knowledge base</p>
+                                <p>docs.chesstournamentmanager.com</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="{% static 'js/dropdown.js' %}"></script>
+</body>
+</html>

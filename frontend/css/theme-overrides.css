@@ -1,0 +1,1195 @@
+/* =================================
+   Theme Variable Overrides
+   Ensures all components use theme variables
+   ================================= */
+
+/* Auth Components */
+.auth-card {
+    background: var(--bg-card) !important;
+    color: var(--text-primary);
+}
+
+.auth-header h1 {
+    color: var(--primary);
+}
+
+.auth-header p {
+    color: var(--text-secondary);
+}
+
+.auth-link {
+    color: var(--text-secondary);
+}
+
+/* Dashboard Components */
+.stat-card {
+    color: var(--text-inverse);
+}
+
+/* Tournament Components */
+.tournament-card {
+    background: var(--bg-card) !important;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+/* Player Components */
+.player-card {
+    background: var(--bg-card) !important;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+/* Modal Components */
+.modal-content {
+    background: var(--bg-card) !important;
+    color: var(--text-primary);
+}
+
+.modal-header {
+    border-bottom-color: var(--border-color);
+}
+
+.modal-footer {
+    border-top-color: var(--border-color);
+}
+
+/* Table Components */
+.table {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.table th {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.table td {
+    border-color: var(--border-color);
+}
+
+.table tbody tr:hover {
+    background: var(--bg-hover);
+}
+
+/* Form Components */
+.form-control {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.form-group label {
+    color: var(--text-primary) !important;
+}
+
+select.form-control {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+select.form-control option {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+textarea.form-control {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    background: var(--bg-card);
+}
+
+.form-control::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* Dropdown Components */
+.dropdown-menu {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.dropdown-item {
+    color: var(--text-primary);
+}
+
+.dropdown-item:hover {
+    background: var(--bg-hover);
+}
+
+/* Badge Components */
+.badge {
+    background: var(--primary);
+    color: var(--text-inverse);
+}
+
+.badge-success {
+    background: var(--success);
+}
+
+.badge-danger {
+    background: var(--danger);
+}
+
+.badge-warning {
+    background: var(--warning);
+}
+
+.badge-info {
+    background: var(--info);
+}
+
+/* Alert Components */
+.alert {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.alert-success {
+    background: rgba(39, 174, 96, 0.1);
+    color: var(--success);
+    border-color: var(--success);
+}
+
+.alert-danger {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.alert-warning {
+    background: rgba(243, 156, 18, 0.1);
+    color: var(--warning);
+    border-color: var(--warning);
+}
+
+.alert-info {
+    background: rgba(52, 152, 219, 0.1);
+    color: var(--info);
+    border-color: var(--info);
+}
+
+/* Loading Spinner */
+.loading-overlay {
+    background: var(--overlay-bg);
+}
+
+.spinner {
+    border-color: var(--border-light);
+    border-top-color: var(--primary);
+}
+
+/* Toast Notifications */
+.toast {
+    background: #ffffff !important;
+    color: #2c3e50 !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+.toast,
+.toast *,
+.toast .toast-message,
+.toast .toast-icon {
+    color: #2c3e50 !important;
+}
+
+.toast.success {
+    border-left: 4px solid var(--success);
+}
+
+.toast.error {
+    border-left: 4px solid var(--danger);
+}
+
+.toast.warning {
+    border-left: 4px solid var(--warning);
+}
+
+.toast.info {
+    border-left: 4px solid var(--info);
+}
+
+/* Tabs */
+.tabs {
+    border-bottom-color: var(--border-color);
+}
+
+.tab {
+    color: var(--text-secondary);
+    border-bottom-color: transparent;
+}
+
+.tab.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.tab:hover {
+    color: var(--primary);
+    background: var(--bg-hover);
+}
+
+/* Pagination */
+.pagination {
+    gap: 0.5rem;
+}
+
+.pagination-item {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.pagination-item:hover {
+    background: var(--bg-hover);
+}
+
+.pagination-item.active {
+    background: var(--primary);
+    color: var(--text-inverse);
+    border-color: var(--primary);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-dark);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-tertiary);
+}
+
+/* Selection */
+::selection {
+    background: var(--primary);
+    color: var(--text-inverse);
+}
+
+::-moz-selection {
+    background: var(--primary);
+    color: var(--text-inverse);
+}
+
+/* Links */
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+}
+
+.card-header h2 {
+    color: var(--text-primary) !important;
+}
+
+.card-header h3 {
+    color: var(--text-primary) !important;
+}
+
+/* Paragraphs */
+p {
+    color: var(--text-primary);
+}
+
+/* Notification Styles - Ensure proper theming */
+.notifications-dropdown {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+.notifications-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff !important;
+}
+
+.notifications-header h3 {
+    color: #ffffff !important;
+}
+
+.notifications-header .btn {
+    background: rgba(255,255,255,0.2) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+}
+
+.notifications-header .btn:hover {
+    background: rgba(255,255,255,0.35) !important;
+}
+
+.notification-item {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.notification-item:hover {
+    background: #f7fafc !important;
+}
+
+.notification-item .notification-message,
+.notification-item .notification-content,
+.notification-empty,
+.notification-empty p {
+    color: #2c3e50 !important;
+}
+
+.notification-item .notification-time {
+    color: #718096 !important;
+}
+
+.notification-item.unread {
+    background: #f0f4ff !important;
+}
+
+.notification-empty {
+    color: #718096 !important;
+}
+
+/* Ensure navbar links work properly */
+.nav-menu a {
+    color: var(--navbar-text) !important;
+}
+
+.nav-brand {
+    color: var(--navbar-text) !important;
+}
+
+/* Chess Game - Active Player Styling */
+.player-info {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.player-info.active {
+    border-color: var(--active-player-color) !important;
+    border-width: 3px !important;
+    box-shadow: 0 0 20px var(--active-player-glow) !important;
+}
+
+.player-name {
+    color: var(--text-primary) !important;
+}
+
+.player-time {
+    color: var(--text-secondary) !important;
+}
+
+.game-info {
+    background: var(--bg-secondary) !important;
+}
+
+.move-history {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+.move-history h3 {
+    color: var(--text-primary) !important;
+}
+
+/* =================================
+   SVEOBUHVATNE POPRAVKE VIDLJIVOSTI
+   Osigurava čitljivost teksta u svim temama
+   ================================= */
+
+/* Osnovni tekst - osigurava kontrast */
+body {
+    color: var(--text-primary) !important;
+}
+
+/* Svi tekstovi unutar kartica */
+.card,
+.card p,
+.card span,
+.card div,
+.card label,
+.card small {
+    color: var(--text-primary);
+}
+
+.card .meta-item,
+.card .meta-item span,
+.card .tournament-meta span {
+    color: var(--text-secondary) !important;
+}
+
+.card .meta-item strong {
+    color: var(--text-primary) !important;
+}
+
+/* Tekst u formama */
+.form-group small,
+label small {
+    color: var(--text-tertiary) !important;
+}
+
+/* Placeholder tekst */
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-tertiary) !important;
+    opacity: 0.8;
+}
+
+/* Divider tekst (npr. "ili") */
+.auth-card span,
+.auth-container span {
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Horizontalne linije */
+.auth-card hr,
+.auth-container hr {
+    border-top-color: var(--border-color) !important;
+}
+
+/* Info kartice s gradijentom - bijeli tekst */
+.card[style*="gradient"] p,
+.card[style*="gradient"] h3 {
+    color: white !important;
+}
+
+/* Tablice */
+.table td,
+.table th,
+table td,
+table th,
+table strong {
+    color: var(--text-primary) !important;
+}
+
+/* Statistike */
+.stat-card h3,
+.stat-card p,
+.stat-card div {
+    color: white !important;
+}
+
+/* Profile podaci */
+.profile-info span,
+.info-value,
+.info-label {
+    color: var(--text-primary) !important;
+}
+
+/* ELO kategorije */
+[style*="font-size: 1.25rem"] {
+    color: var(--text-primary) !important;
+}
+
+/* Kod za turnir */
+.tournament-code {
+    color: white !important;
+}
+
+/* Prazna stanja */
+.empty-state h3,
+.empty-state p {
+    color: var(--text-secondary) !important;
+}
+
+/* Obavijesti dropdown */
+.notifications-list p,
+.notification-item p {
+    color: #2c3e50 !important;
+}
+
+/* Toast poruke */
+.toast-message {
+    color: #2c3e50 !important;
+}
+
+/* Select opcije */
+select option {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Kod input */
+.digit-input {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.digit-input:focus {
+    border-color: var(--primary) !important;
+}
+
+/* Napredne postavke */
+.advanced-settings,
+#advanced-settings {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+.advanced-settings label,
+.advanced-settings span,
+.advanced-settings small,
+#advanced-settings label,
+#advanced-settings span,
+#advanced-settings small {
+    color: var(--text-primary) !important;
+}
+
+#advanced-settings small,
+.advanced-settings small {
+    color: var(--text-tertiary) !important;
+}
+
+/* Checkbox label tekst */
+input[type="checkbox"] + span,
+label span {
+    color: var(--text-primary) !important;
+}
+
+label span small {
+    color: var(--text-tertiary) !important;
+}
+
+/* Game info i status */
+.game-status,
+.match-info span,
+.round-info {
+    color: var(--text-primary) !important;
+}
+
+/* Breadcrumbs i navigacija */
+.breadcrumb,
+.breadcrumb a {
+    color: var(--text-secondary) !important;
+}
+
+/* User dropdown tekst */
+.user-dropdown-item span {
+    color: var(--text-primary) !important;
+}
+
+.logout-item span {
+    color: var(--danger) !important;
+}
+
+/* Kvaka (checkmark) u tema selektoru */
+.theme-check {
+    color: var(--success) !important;
+}
+
+/* Responsive table scroll hint */
+.table-responsive::after {
+    color: var(--text-tertiary) !important;
+}
+
+/* =================================
+   DODATNE POPRAVKE VIDLJIVOSTI FONTOVA
+   Za sve moguće elemente
+   ================================= */
+
+/* GLOBALNO - svi elementi moraju koristiti theme boje */
+*, *::before, *::after {
+    --safe-text: var(--text-primary);
+}
+
+/* Svi child elementi kartica */
+.card * {
+    color: inherit;
+}
+
+.card h1, .card h2, .card h3, .card h4, .card h5, .card h6 {
+    color: var(--text-primary) !important;
+}
+
+.card p, .card span, .card div, .card label, .card small, .card strong, .card em {
+    color: var(--text-primary);
+}
+
+/* Sekundarni tekst */
+.text-muted,
+.text-secondary,
+.meta,
+.subtitle,
+.description {
+    color: var(--text-secondary) !important;
+}
+
+/* Liste */
+ul li, ol li, .list-item {
+    color: var(--text-primary);
+}
+
+/* Definicije */
+dt, dd {
+    color: var(--text-primary) !important;
+}
+
+/* Citati */
+blockquote, q {
+    color: var(--text-secondary) !important;
+    border-left-color: var(--primary) !important;
+}
+
+/* Kod inline */
+code:not(pre code) {
+    background: var(--bg-secondary) !important;
+    color: var(--primary) !important;
+}
+
+/* Pre blokovi */
+pre {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Legende forme */
+fieldset legend {
+    color: var(--text-primary) !important;
+}
+
+/* Help tekst */
+.help-text, .helper-text, .hint {
+    color: var(--text-tertiary) !important;
+}
+
+/* Greške */
+.error, .error-text, .invalid-feedback {
+    color: var(--danger) !important;
+}
+
+/* Uspjeh */
+.success-text {
+    color: var(--success) !important;
+}
+
+/* Ikonice s tekstom */
+.icon-text, [class*="icon"] + span {
+    color: var(--text-primary) !important;
+}
+
+/* Counter/brojači */
+.counter, .count, .badge-count {
+    color: var(--text-inverse) !important;
+    background: var(--primary) !important;
+}
+
+/* Svi inputi - vidljiv tekst */
+input, textarea, select {
+    color: var(--text-primary) !important;
+}
+
+input:disabled, textarea:disabled, select:disabled {
+    color: var(--text-tertiary) !important;
+    background: var(--bg-secondary) !important;
+}
+
+/* Details/Summary elementi */
+details summary {
+    color: var(--text-primary) !important;
+}
+
+details {
+    color: var(--text-primary) !important;
+}
+
+/* Figure caption */
+figcaption {
+    color: var(--text-secondary) !important;
+}
+
+/* Address element */
+address {
+    color: var(--text-primary) !important;
+}
+
+/* Time element */
+time {
+    color: var(--text-secondary) !important;
+}
+
+/* Abbr/acronym */
+abbr {
+    color: var(--text-primary) !important;
+}
+
+/* Mark/highlight */
+mark {
+    background: var(--warning) !important;
+    color: var(--text-inverse) !important;
+}
+
+/* Del/ins */
+del {
+    color: var(--danger) !important;
+}
+
+ins {
+    color: var(--success) !important;
+}
+
+/* Kbd */
+kbd {
+    background: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Samp */
+samp {
+    color: var(--text-primary) !important;
+}
+
+/* Var */
+var {
+    color: var(--primary) !important;
+}
+
+/* Progress */
+progress {
+    background: var(--bg-secondary) !important;
+}
+
+/* Meter */
+meter {
+    background: var(--bg-secondary) !important;
+}
+
+/* Output */
+output {
+    color: var(--text-primary) !important;
+}
+
+/* Dialog */
+dialog {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Specifični elementi za šah aplikaciju */
+.player-name,
+.player-rating,
+.player-score,
+.match-score,
+.round-number,
+.table-number,
+.tournament-name,
+.tournament-date,
+.game-result {
+    color: var(--text-primary) !important;
+}
+
+/* Status badge tekst */
+.status-active,
+.status-pending,
+.status-completed {
+    font-weight: 600;
+}
+
+/* Navigacijski breadcrumb */
+.page-title,
+.section-title {
+    color: var(--text-primary) !important;
+}
+
+/* Podnaslovi */
+.page-subtitle,
+.section-subtitle {
+    color: var(--text-secondary) !important;
+}
+
+/* Footer tekst */
+footer, footer p, footer span, footer a {
+    color: var(--text-secondary) !important;
+}
+
+/* Tooltip tekst */
+[data-tooltip]::after,
+.tooltip-text {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Accessibility - focus outlines */
+:focus-visible {
+    outline: 2px solid var(--primary) !important;
+    outline-offset: 2px !important;
+}
+
+/* Osiguraj da je tekst uvijek čitljiv na gradijentima */
+[style*="linear-gradient"] {
+    color: white !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+[style*="linear-gradient"] * {
+    color: white !important;
+}
+
+/* Dark theme specific - pojačaj kontrast */
+[data-theme="dark"] .card,
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .modal-content {
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-dark) !important;
+}
+
+/* Sunset theme - prilagodba za toplu paletu */
+[data-theme="sunset"] .card {
+    border-color: var(--border-color) !important;
+}
+
+/* Purple theme - osiguraj kontrast */
+[data-theme="purple"] input,
+[data-theme="purple"] textarea,
+[data-theme="purple"] select {
+    background: var(--bg-card) !important;
+}
+
+/* =================================
+   PROFILE HEADER - bijeli tekst uvijek
+   ================================= */
+.profile-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    color: white !important;
+    text-align: center;
+    border-radius: 12px;
+}
+
+.profile-header h1,
+.profile-header h2,
+.profile-header h3,
+.profile-header p,
+.profile-header span {
+    color: white !important;
+}
+
+.profile-header p {
+    color: rgba(255,255,255,0.9) !important;
+}
+
+/* Profile avatar border */
+.profile-avatar {
+    border: 3px solid rgba(255,255,255,0.3);
+}
+
+/* =================================
+   GAME RESULT MODAL - ensure readability
+   ================================= */
+.game-result-stats .stat-label {
+    color: var(--text-secondary) !important;
+}
+
+.game-result-stats .stat-value {
+    color: var(--text-primary) !important;
+}
+
+/* Tournament code - always visible green */
+.code-value {
+    color: #22c55e !important;
+    text-shadow: 0 0 10px rgba(34,197,94,0.3) !important;
+}
+
+.code-display h3,
+.code-display h4 {
+    color: var(--text-primary) !important;
+}
+
+/* Winner label in brackets - white on green */
+.bracket-winner,
+.match-winner,
+.tournament-winner {
+    background: linear-gradient(135deg, #16a34a, #22c55e) !important;
+    color: white !important;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.bracket-winner *,
+.match-winner *,
+.tournament-winner * {
+    color: white !important;
+}
+
+/* Match status labels */
+[style*="border: 2px solid #22c55e"],
+[style*="border: 2px solid rgb(34, 197, 94)"] {
+    color: white !important;
+}
+
+[style*="border: 2px solid #22c55e"] *,
+[style*="border: 2px solid rgb(34, 197, 94)"] * {
+    color: white !important;
+}
+
+/* Moves list styling */
+.moves-list {
+    color: var(--text-primary);
+}
+
+.sidebar-section h3 {
+    color: var(--text-primary) !important;
+}
+
+/* Potezi panel */
+#moves-list {
+    color: var(--text-primary) !important;
+}
+
+.no-moves {
+    color: var(--text-secondary) !important;
+}
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* =================================
+   DODATNE POPRAVKE ZA SVE TEME
+   ================================= */
+
+/* Svi elementi u karticama */
+.card h1, .card h2, .card h3, .card h4, .card h5, .card h6 {
+    color: var(--text-primary) !important;
+}
+
+.card p, .card span, .card div {
+    color: var(--text-primary);
+}
+
+.card .text-muted,
+.card .meta,
+.card small {
+    color: var(--text-secondary) !important;
+}
+
+/* Statistike - bijeli tekst na gradijentima */
+.stat-card,
+[style*="linear-gradient(135deg"] {
+    color: white !important;
+}
+
+.stat-card *,
+[style*="linear-gradient(135deg"] * {
+    color: white !important;
+}
+
+/* Settings page sections */
+.settings-section h3 {
+    color: var(--text-primary) !important;
+}
+
+.settings-section p {
+    color: var(--text-secondary) !important;
+}
+
+/* Theme preview text */
+.theme-preview div {
+    color: var(--text-primary) !important;
+}
+
+.theme-preview div[style*="color: var(--text-secondary)"] {
+    color: var(--text-secondary) !important;
+}
+
+/* User dropdown */
+.user-dropdown {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.user-dropdown-header {
+    background: var(--bg-secondary) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.user-name {
+    color: var(--text-primary) !important;
+}
+
+.user-email {
+    color: var(--text-secondary) !important;
+}
+
+.user-dropdown-item {
+    color: var(--text-primary) !important;
+}
+
+.user-dropdown-item:hover {
+    background: var(--bg-hover) !important;
+}
+
+/* Logout button special */
+.logout-item,
+.logout-item span {
+    color: var(--danger) !important;
+}
+
+.logout-item:hover {
+    background: rgba(231, 76, 60, 0.1) !important;
+}
+/* ===========================
+   Text Color Fixes for All Themes
+   =========================== */
+
+/* Ensure card content text is visible */
+.card,
+.card-body {
+    color: var(--text-primary);
+}
+
+.card p,
+.card span,
+.card div {
+    color: inherit;
+}
+
+/* Settings page specific */
+.settings-section h3,
+.settings-section h4,
+.settings-section label {
+    color: var(--text-primary) !important;
+}
+
+.settings-section p,
+.settings-section .setting-description {
+    color: var(--text-secondary) !important;
+}
+
+/* Profile page specific */
+.profile-info-item span {
+    color: var(--text-primary) !important;
+}
+
+/* Tournament list items */
+.tournament-list-item {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+}
+
+.tournament-list-item:hover {
+    background: var(--bg-tertiary);
+}
+
+/* Friends list items */
+.friend-item,
+.player-item {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+}
+
+.friend-item:hover,
+.player-item:hover {
+    background: var(--bg-tertiary);
+}
+
+/* Ensure buttons have proper contrast */
+.btn {
+    color: var(--text-inverse);
+}
+
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info {
+    color: #ffffff !important;
+}
+
+.btn-secondary {
+    color: #ffffff !important;
+}
+
+/* Light theme text fixes */
+[data-theme="light"] .card,
+[data-theme="ocean"] .card,
+[data-theme="purple"] .card,
+[data-theme="green"] .card,
+[data-theme="sunset"] .card {
+    color: var(--text-primary);
+}
+
+/* Dark theme text fixes */
+[data-theme="dark"] .card {
+    color: var(--text-primary);
+}
+
+/* Modal text */
+.modal,
+.modal-content,
+.modal-body {
+    color: var(--text-primary);
+}
+
+/* Dropdown menu text */
+.dropdown-menu,
+.dropdown-item {
+    color: var(--text-primary);
+}
+
+/* Toast/Alert text */
+.toast,
+.alert {
+    color: var(--text-primary);
+}
+
+/* Empty state messages */
+.empty-state,
+.no-data,
+.no-results {
+    color: var(--text-secondary);
+}
+
+/* Form hints and help text */
+.form-hint,
+.help-text,
+.form-text {
+    color: var(--text-secondary) !important;
+}
+
+/* Player profile modal */
+.challenge-modal .modal-content {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Settings toggle descriptions */
+.toggle-setting .setting-description,
+.setting-item .setting-description {
+    color: var(--text-secondary) !important;
+}

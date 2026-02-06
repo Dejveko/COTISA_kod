@@ -1,0 +1,408 @@
+/* Button Border Radius Fix - Override all buttons to have rounded corners */
+
+/* Set minimum height for all buttons */
+.btn,
+button.btn,
+a.btn,
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info,
+.btn-chesscom,
+.action-btn,
+.create-tournament-btn,
+.join-tournament-btn,
+.save-btn,
+.submit-btn,
+.cancel-btn,
+.edit-btn,
+.delete-btn,
+.menu-btn,
+.btn-next,
+.btn-prev,
+.btn-submit,
+.btn-login,
+.btn-register,
+.join-btn,
+.add-tournament-btn,
+.additional-settings-btn,
+.customize-btn,
+.settings-menu-btn,
+.back-btn,
+.admin-btn,
+.admin-action-btn,
+.revoke-btn,
+.award-btn,
+.popup-btn-primary,
+.popup-btn-secondary,
+.cta-btn,
+.tab-btn,
+.info-btn,
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    border-radius: 25px !important;
+}
+
+/* Set minimum height for all buttons */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.btn,
+.menu-btn,
+.btn-next,
+.btn-prev,
+.btn-submit,
+.btn-login,
+.btn-register {
+    min-height: 44px !important;
+    padding: 0.75rem 1.5rem !important;
+    line-height: 1.3 !important;
+}
+
+/* Smaller buttons */
+.btn-sm,
+.btn.btn-sm {
+    border-radius: 20px !important;
+}
+
+/* Large buttons */
+.btn-lg,
+.btn.btn-lg {
+    border-radius: 30px !important;
+}
+
+/* Icon buttons - circle */
+.btn-icon,
+.notification-bell,
+.theme-btn,
+.user-dropdown-btn {
+    border-radius: 25px !important;
+}
+
+/* Cards and containers keep subtle rounding */
+.card,
+.modal-content,
+.dropdown-menu,
+.theme-dropdown,
+.user-dropdown {
+    border-radius: 12px !important;
+}
+
+/* Input fields */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+    border-radius: 8px !important;
+}
+
+/* Small elements */
+.badge,
+.tag,
+.chip {
+    border-radius: 20px !important;
+}
+
+/* Tournament and player cards */
+.tournament-card,
+.player-card,
+.game-card {
+    border-radius: 12px !important;
+}
+
+/* Chess board and pieces containers */
+.chess-board {
+    border-radius: 8px !important;
+}
+
+/* Alerts and notifications */
+.alert,
+.toast,
+.notification-item {
+    border-radius: 8px !important;
+}
+
+/* Modals */
+.modal-header {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.modal-footer {
+    border-radius: 0 0 12px 12px !important;
+}
+
+/* =================================
+   POBOLJŠANI STILOVI GUMBOVA
+   Više prostora i bolja čitljivost
+   ================================= */
+
+/* Svi gumbovi - ZNATNO poboljšani padding */
+.btn,
+button.btn,
+a.btn,
+button[type="submit"],
+button[type="button"],
+input[type="submit"],
+input[type="button"] {
+    padding: 1rem 2rem !important;
+    min-height: 50px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.75rem !important;
+    line-height: 1.4 !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.02em !important;
+    border-radius: 10px !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+/* Mali gumbovi */
+.btn-sm,
+.btn.btn-sm {
+    padding: 0.75rem 1.5rem !important;
+    min-height: 42px !important;
+    font-size: 0.9rem !important;
+}
+
+/* Veliki gumbovi */
+.btn-lg,
+.btn.btn-lg {
+    padding: 1.25rem 2.75rem !important;
+    min-height: 58px !important;
+    font-size: 1.15rem !important;
+}
+
+/* Gumbovi u akcijskim trakama */
+.action-buttons .btn {
+    padding: 1rem 2rem !important;
+    margin: 0.25rem !important;
+}
+
+/* Gumbi u formama */
+form .btn,
+form button {
+    margin-top: 1rem !important;
+    width: 100%;
+}
+
+/* Icon gumbovi - više prostora */
+.btn-icon {
+    padding: 0.875rem !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+}
+
+/* Dropdown gumbovi */
+.theme-btn,
+.user-dropdown-btn {
+    padding: 0.625rem 1rem !important;
+    min-height: 40px !important;
+}
+
+/* Notification bell */
+.notification-bell {
+    padding: 0.5rem 0.75rem !important;
+    min-height: 40px !important;
+    min-width: 40px !important;
+}
+
+/* User dropdown items - NE smiju imati gumb stilove */
+.user-dropdown-item,
+.user-dropdown-item.logout-item {
+    padding: 0.75rem 1rem !important;
+    min-height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font-size: 0.9rem !important;
+    font-weight: normal !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+}
+
+.user-dropdown-item.logout-item {
+    color: var(--danger) !important;
+    font-weight: 600 !important;
+}
+
+.user-dropdown-item:hover {
+    background: var(--bg-hover) !important;
+}
+
+.user-dropdown-item.logout-item:hover {
+    background: rgba(231, 76, 60, 0.1) !important;
+}
+
+/* Modal gumbovi */
+.modal-content .btn {
+    padding: 1rem 1.75rem !important;
+    min-height: 48px !important;
+}
+
+/* Alert/Toast akcije */
+.alert .btn,
+.toast .btn {
+    padding: 0.75rem 1.25rem !important;
+    min-height: 40px !important;
+}
+
+/* Osiguraj čitljivost teksta na gumbima */
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info {
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+.btn-secondary {
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2) !important;
+}
+
+/* Gumb s ikonom - osiguraj prostor */
+.btn svg,
+.btn img,
+.btn i {
+    flex-shrink: 0;
+    margin-right: 0.5rem;
+}
+
+/* Extra padding za navigacijske gumbove */
+.nav-btn,
+.nav-menu .btn {
+    padding: 0.875rem 1.5rem !important;
+}
+
+/* Primarna akcija - još veći naglasak */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4) !important;
+}
+
+/* Success gumb */
+.btn-success {
+    background: linear-gradient(135deg, var(--success) 0%, #1e8449 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3) !important;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4) !important;
+}
+
+/* Danger gumb */
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3) !important;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4) !important;
+}
+
+/* Outline gumbovi - trebaju vidljiv tekst */
+.btn-outline-primary {
+    color: var(--primary) !important;
+    border: 2px solid var(--primary) !important;
+    background: var(--bg-card) !important;
+}
+
+.btn-outline-primary:hover:not(:disabled),
+.btn-outline-primary.active {
+    background: var(--primary) !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-secondary {
+    color: var(--text-primary) !important;
+    border: 2px solid var(--border-color) !important;
+    background: transparent !important;
+}
+
+/* Full width gumbovi */
+.btn-block,
+.btn-full-width {
+    width: 100% !important;
+    padding: 1.125rem 2rem !important;
+}
+
+
+/* =================================
+   OSIGURAJ KLIKABILNOST
+   ================================= */
+
+/* Svi interaktivni elementi moraju biti klikabilni */
+button,
+.btn,
+a,
+input,
+select,
+textarea,
+[onclick],
+[role="button"] {
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+input:not([type="button"]):not([type="submit"]):not([type="reset"]),
+textarea,
+select {
+    cursor: text;
+}
+
+/* Osiguraj da forme rade */
+form,
+form * {
+    pointer-events: auto;
+}
+/* Button Text Color Fixes - Ensure white text on all colored buttons */
+.btn-primary,
+.btn-primary span,
+.btn-success,
+.btn-success span,
+.btn-danger,
+.btn-danger span,
+.btn-warning,
+.btn-warning span,
+.btn-info,
+.btn-info span {
+    color: #ffffff !important;
+}
+
+.btn-secondary,
+.btn-secondary span {
+    color: #ffffff !important;
+}

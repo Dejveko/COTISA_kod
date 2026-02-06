@@ -1,0 +1,18 @@
+RewriteEngine On
+
+# Auto-redirect mobile users to mobile.html (only for root/index)
+RewriteCond %{HTTP_USER_AGENT} "android|iphone|ipod|ipad|blackberry|mobile|opera mini|opera mobi|windows phone" [NC]
+RewriteCond %{REQUEST_URI} ^/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/index\.html$
+RewriteCond %{REQUEST_URI} !^/mobile
+RewriteRule ^(.*)$ /mobile.html [L,R=302]
+
+# Remove .html extension (clean URLs)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^([^/]+)/?$ $1.html [L]
+
+# If no file/folder found, serve index.html (SPA fallback)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]

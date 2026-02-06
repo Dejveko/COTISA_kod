@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odjava - COTISA Pro</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="{% url 'index' %}" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;"><img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon" style="height: 32px;"> COTISA Pro</a></h1>
+            <div class="header-right">
+                <div class="icon-space">
+                    <i class="fas fa-chess-king"></i>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown()">☰</button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'index' %}"><i class="fas fa-home"></i> Početna</a>
+                        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profil</a>
+                        <a href="#" onclick="openSettingsFromNav(); return false;"><i class="fas fa-cog"></i> Postavke</a>
+                        <a href="{% url 'manage_tournaments' %}"><i class="fas fa-trophy"></i> Upravljanje Turnirima</a>
+                        <a href="{% url 'player_database' %}"><i class="fas fa-database"></i> Baza Igrača</a>
+                        <a href="{% url 'history' %}"><i class="fas fa-chart-bar"></i> Izvještaji i Statistike</a>
+                        <a href="{% url 'help' %}"><i class="fas fa-question-circle"></i> Pomoć</a>
+                        <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> O nama</a>
+                        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Odjava</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="logout-container">
+                <div class="logout-modal">
+                    <div class="logout-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <h2>Potvrdi Odjavu</h2>
+                    <p>Jeste li sigurni da se želite odjaviti iz COTISA Pro sustava?</p>
+                    
+                    <div class="logout-options">
+                        <button class="logout-btn confirm" onclick="confirmLogout()">
+                            <i class="fas fa-check"></i>
+                            Da, Odjavi me
+                        </button>
+                        <button class="logout-btn cancel" onclick="cancelLogout()">
+                            <i class="fas fa-times"></i>
+                            Odustani
+                        </button>
+                    </div>
+                    
+                    <div class="logout-info">
+                        <p><i class="fas fa-info-circle"></i> Vaša sesija će biti sigurno završena i svi privremeni podaci obrisani.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function confirmLogout() {
+            // Clear any stored session data
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Show logout notification
+            showNotification('Uspješno ste se odjavili!', 'success');
+            
+            // Redirect to login page or home after delay
+            setTimeout(() => {
+                window.location.href = '{% url 'index' %}';
+            }, 2000);
+        }
+
+        function cancelLogout() {
+            // Redirect back to main page
+            window.location.href = '{% url 'index' %}';
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `logout-notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 2000);
+        }
+
+        // Add animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+    <script src="dropdown.js"></script>
+</body>
+</html>

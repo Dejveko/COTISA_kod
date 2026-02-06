@@ -1,0 +1,496 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upravljanje Turnirima - COTISA Pro</title>
+    <link rel="stylesheet" href="{% static 'css/themes.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}?v=17">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}?v=8">
+    <link rel="stylesheet" href="{% static 'css/theme-overrides.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/mobile.css' %}?v=23">
+    <style>
+        /* Force hide mobile nav items on desktop */
+        @media (min-width: 577px) {
+            .mobile-nav-item,
+            .mobile-nav-divider {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'index' %}" class="nav-brand">
+                <img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon">
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="{% url 'index' %}">🏠 Početna</a></li>
+                <li><a href="{% url 'player_database' %}">👥 Igrači</a></li>
+                <li><a href="{% url 'profile' %}">👤 Profil</a></li>
+                <li><a href="{% url 'manage_tournaments' %}" class="active admin-only">⚙️ Admin</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-dropdown-container">
+                    <button class="user-dropdown-btn" id="user-dropdown-btn">
+                        <span id="username-display">{{ user.username }}</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="user-dropdown-header">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-details">
+                                <div class="user-name">{{ user.username }}</div>
+                                <div class="user-email">{{ user.email }}</div>
+                            </div>
+                        </div>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="{% url 'profile' %}" class="user-dropdown-item">
+                            <span class="item-icon">👤</span><span>Moj Profil</span>
+                        </a>
+                        <a href="{% url 'manage_tournaments' %}" class="user-dropdown-item admin-only">
+                            <span class="item-icon">⚙️</span><span>Admin Upravljanje</span>
+                        </a>
+                        <a href="{% static 'settings.html' %}" class="user-dropdown-item">
+                            <span class="item-icon">⚙️</span><span>Postavke</span>
+                        </a>
+                        <a href="{% static 'help.html' %}" class="user-dropdown-item">
+                            <span class="item-icon">❓</span><span>Pomoć</span>
+                        </a>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="user-dropdown-item logout-item">
+                            <span class="item-icon">🚪</span><span>Odjava</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="app">
+    <div class="container">
+
+        <main>
+            <div class="manage-container">
+                <div class="page-header">
+                    <div class="header-content">
+                        <h2><i class="fas fa-tasks"></i> Vaši Turniri</h2>
+                        <p>Upravljajte svojimi aktivnim i završenim turnirima</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="action-btn" onclick="window.location.href='{% url 'create_tournament' %}'">
+                            <i class="fas fa-plus"></i> Novi Turnir
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tournament-tabs">
+                    <button class="tab-btn active" onclick="showTab('active')">
+                        <i class="fas fa-play-circle"></i> Aktivni (3)
+                    </button>
+                    <button class="tab-btn" onclick="showTab('upcoming')">
+                        <i class="fas fa-calendar-plus"></i> Nadolazeći (2)
+                    </button>
+                    <button class="tab-btn" onclick="showTab('completed')">
+                        <i class="fas fa-check-circle"></i> Završeni (5)
+                    </button>
+                </div>
+
+                <div class="tab-content active" id="active-tab">
+                    <div class="tournaments-grid" id="active-tournaments">
+                        <!-- Active tournaments will be populated here -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="upcoming-tab">
+                    <div class="tournaments-grid" id="upcoming-tournaments">
+                        <!-- Upcoming tournaments will be populated here -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="completed-tab">
+                    <div class="tournaments-grid" id="completed-tournaments">
+                        <!-- Completed tournaments will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+        </div>
+    </div>
+
+    <!-- Tournament Management Modal -->
+    <div id="manage-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close" onclick="closeManageModal()">&times;</span>
+            <div id="modal-content-area">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class TournamentManager {
+            constructor() {
+                this.tournaments = this.generateSampleTournaments();
+                this.activeTab = 'active';
+                this.init();
+            }
+
+            init() {
+                this.loadCreatedTournaments();
+                this.displayTournaments();
+            }
+
+            loadCreatedTournaments() {
+                const created = JSON.parse(localStorage.getItem('created_tournaments') || '[]');
+                // Add user created tournaments to the list
+                created.forEach(tournament => {
+                    if (!this.tournaments.find(t => t.id === tournament.id)) {
+                        this.tournaments.unshift(tournament);
+                    }
+                });
+            }
+
+            generateSampleTournaments() {
+                const now = new Date();
+                const future = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days from now
+                const past = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000)); // 30 days ago
+
+                return [
+                    {
+                        id: 1,
+                        name: "Zagreb Rapid Open",
+                        date: now.toISOString().split('T')[0],
+                        time: "14:00",
+                        status: "active",
+                        currentPlayers: 24,
+                        maxPlayers: 32,
+                        location: "Zagreb, Dom Sportova",
+                        timeControl: "15+10",
+                        rounds: 7,
+                        currentRound: 4,
+                        entryFee: 100,
+                        prizeFund: 2500,
+                        organizer: "Vi"
+                    },
+                    {
+                        id: 2,
+                        name: "Split Blitz Championship",
+                        date: future.toISOString().split('T')[0],
+                        time: "18:00",
+                        status: "upcoming",
+                        currentPlayers: 16,
+                        maxPlayers: 32,
+                        location: "Split, Kulturni centar",
+                        timeControl: "3+2",
+                        rounds: 8,
+                        currentRound: 0,
+                        entryFee: 50,
+                        prizeFund: 1000,
+                        organizer: "Vi"
+                    },
+                    {
+                        id: 3,
+                        name: "Osijek Youth Tournament",
+                        date: past.toISOString().split('T')[0],
+                        time: "10:00",
+                        status: "completed",
+                        currentPlayers: 28,
+                        maxPlayers: 32,
+                        location: "Osijek, Škola",
+                        timeControl: "20+10",
+                        rounds: 7,
+                        currentRound: 7,
+                        entryFee: 75,
+                        prizeFund: 1500,
+                        organizer: "Vi"
+                    }
+                ];
+            }
+
+            displayTournaments() {
+                const activeTournaments = this.tournaments.filter(t => t.status === 'active');
+                const upcomingTournaments = this.tournaments.filter(t => t.status === 'upcoming' || t.status === 'published');
+                const completedTournaments = this.tournaments.filter(t => t.status === 'completed');
+
+                this.renderTournamentCards('active-tournaments', activeTournaments, 'active');
+                this.renderTournamentCards('upcoming-tournaments', upcomingTournaments, 'upcoming');
+                this.renderTournamentCards('completed-tournaments', completedTournaments, 'completed');
+
+                // Update tab counts
+                document.querySelector('.tab-btn:nth-child(1)').innerHTML = `<i class="fas fa-play-circle"></i> Aktivni (${activeTournaments.length})`;
+                document.querySelector('.tab-btn:nth-child(2)').innerHTML = `<i class="fas fa-calendar-plus"></i> Nadolazeći (${upcomingTournaments.length})`;
+                document.querySelector('.tab-btn:nth-child(3)').innerHTML = `<i class="fas fa-check-circle"></i> Završeni (${completedTournaments.length})`;
+            }
+
+            renderTournamentCards(containerId, tournaments, type) {
+                const container = document.getElementById(containerId);
+                
+                if (tournaments.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-tournaments">
+                            <i class="fas fa-${type === 'active' ? 'play' : type === 'upcoming' ? 'calendar' : 'history'}"></i>
+                            <h3>Nema ${type === 'active' ? 'aktivnih' : type === 'upcoming' ? 'nadolazećih' : 'završenih'} turnira</h3>
+                            <p>${type === 'upcoming' ? 'Stvorite novi turnir klikom na "Novi Turnir" gumb.' : 'Ovdje će se prikazati vaši turniri.'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = tournaments.map(tournament => `
+                    <div class="management-card ${type}">
+                        <div class="card-header">
+                            <h3>${tournament.name}</h3>
+                            <div class="status-badge ${tournament.status}">
+                                ${this.getStatusText(tournament.status)}
+                            </div>
+                        </div>
+                        
+                        <div class="card-content">
+                            <div class="tournament-info">
+                                <div class="info-row">
+                                    <span><i class="fas fa-calendar"></i> ${this.formatDate(tournament.date)}</span>
+                                    <span><i class="fas fa-clock"></i> ${tournament.time}</span>
+                                </div>
+                                
+                                <div class="info-row">
+                                    <span><i class="fas fa-users"></i> ${tournament.currentPlayers}/${tournament.maxPlayers}</span>
+                                    <span><i class="fas fa-chess-clock"></i> ${tournament.timeControl}</span>
+                                </div>
+                                
+                                <div class="info-row">
+                                    <span><i class="fas fa-map-marker-alt"></i> ${tournament.location}</span>
+                                </div>
+                                
+                                ${tournament.currentRound > 0 ? `
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${(tournament.currentRound / tournament.rounds) * 100}%"></div>
+                                        <span class="progress-text">Runda ${tournament.currentRound}/${tournament.rounds}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="card-actions">
+                                ${this.getActionButtons(tournament, type)}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            getStatusText(status) {
+                const statusTexts = {
+                    'active': 'U tijeku',
+                    'upcoming': 'Nadolazeći',
+                    'published': 'Objavljen',
+                    'completed': 'Završen'
+                };
+                return statusTexts[status] || status;
+            }
+
+            getActionButtons(tournament, type) {
+                if (type === 'active') {
+                    return `
+                        <button class="action-btn primary" onclick="manageTournament(${tournament.id})">
+                            <i class="fas fa-cogs"></i> Upravljaj
+                        </button>
+                        <button class="action-btn secondary" onclick="viewPairings(${tournament.id})">
+                            <i class="fas fa-list"></i> Parovi
+                        </button>
+                        <button class="action-btn secondary" onclick="enterResults(${tournament.id})">
+                            <i class="fas fa-edit"></i> Rezultati
+                        </button>
+                    `;
+                } else if (type === 'upcoming') {
+                    return `
+                        <button class="action-btn primary" onclick="editTournament(${tournament.id})">
+                            <i class="fas fa-edit"></i> Uredi
+                        </button>
+                        <button class="action-btn secondary" onclick="viewRegistrations(${tournament.id})">
+                            <i class="fas fa-users"></i> Prijave
+                        </button>
+                        <button class="action-btn secondary" onclick="startTournament(${tournament.id})">
+                            <i class="fas fa-play"></i> Pokreni
+                        </button>
+                    `;
+                } else {
+                    return `
+                        <button class="action-btn secondary" onclick="viewResults(${tournament.id})">
+                            <i class="fas fa-trophy"></i> Rezultati
+                        </button>
+                        <button class="action-btn secondary" onclick="generateReport(${tournament.id})">
+                            <i class="fas fa-file-alt"></i> Izvještaj
+                        </button>
+                        <button class="action-btn danger" onclick="deleteTournament(${tournament.id})">
+                            <i class="fas fa-trash"></i> Obriši
+                        </button>
+                    `;
+                }
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('hr-HR');
+            }
+
+            showTab(tabName) {
+                // Update tab buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+                
+                // Update tab content
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+                
+                this.activeTab = tabName;
+            }
+
+            manageTournament(id) {
+                const tournament = this.tournaments.find(t => t.id === id);
+                this.openManageModal('manage', tournament);
+            }
+
+            startTournament(id) {
+                const tournament = this.tournaments.find(t => t.id === id);
+                if (confirm(`Jeste li sigurni da želite pokrenuti turnir "${tournament.name}"?`)) {
+                    tournament.status = 'active';
+                    tournament.currentRound = 1;
+                    this.displayTournaments();
+                    this.showNotification('Turnir je uspješno pokrenut!', 'success');
+                }
+            }
+
+            deleteTournament(id) {
+                const tournament = this.tournaments.find(t => t.id === id);
+                if (confirm(`Jeste li sigurni da želite obrisati turnir "${tournament.name}"? Ova akcija se ne može poništiti.`)) {
+                    this.tournaments = this.tournaments.filter(t => t.id !== id);
+                    
+                    // Update localStorage
+                    const created = JSON.parse(localStorage.getItem('created_tournaments') || '[]');
+                    const updatedCreated = created.filter(t => t.id !== id);
+                    localStorage.setItem('created_tournaments', JSON.stringify(updatedCreated));
+                    
+                    this.displayTournaments();
+                    this.showNotification('Turnir je uspješno obrisan.', 'success');
+                }
+            }
+
+            openManageModal(type, tournament) {
+                const modal = document.getElementById('manage-modal');
+                const contentArea = document.getElementById('modal-content-area');
+                
+                if (type === 'manage') {
+                    contentArea.innerHTML = `
+                        <h3><i class="fas fa-cogs"></i> Upravljanje turnirom: ${tournament.name}</h3>
+                        
+                        <div class="manage-sections">
+                            <div class="manage-section">
+                                <h4><i class="fas fa-users"></i> Sudionici</h4>
+                                <p>Trenutno prijavljeno: ${tournament.currentPlayers}/${tournament.maxPlayers}</p>
+                                <button class="action-btn">Dodaj igrača</button>
+                                <button class="action-btn">Ukloni igrača</button>
+                            </div>
+                            
+                            <div class="manage-section">
+                                <h4><i class="fas fa-list"></i> Runde i parovi</h4>
+                                <p>Trenutna runda: ${tournament.currentRound}/${tournament.rounds}</p>
+                                <button class="action-btn">Generiraj parove</button>
+                                <button class="action-btn">Sljedeća runda</button>
+                            </div>
+                            
+                            <div class="manage-section">
+                                <h4><i class="fas fa-edit"></i> Rezultati</h4>
+                                <button class="action-btn">Unesi rezultate</button>
+                                <button class="action-btn">Pregled tablice</button>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-actions">
+                            <button class="btn-secondary" onclick="closeManageModal()">Zatvori</button>
+                        </div>
+                    `;
+                }
+                
+                modal.style.display = 'block';
+            }
+
+            closeManageModal() {
+                document.getElementById('manage-modal').style.display = 'none';
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.classList.add('show'), 100);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 4000);
+            }
+        }
+
+        // Global functions
+        function showTab(tabName) {
+            tournamentManager.showTab(tabName);
+        }
+
+        function manageTournament(id) {
+            tournamentManager.manageTournament(id);
+        }
+
+        function startTournament(id) {
+            tournamentManager.startTournament(id);
+        }
+
+        function deleteTournament(id) {
+            tournamentManager.deleteTournament(id);
+        }
+
+        function closeManageModal() {
+            tournamentManager.closeManageModal();
+        }
+
+        function editTournament(id) {
+            alert('Funkcija uređivanja turnira će biti dostupna uskoro.');
+        }
+
+        function viewRegistrations(id) {
+            alert('Pregled prijava će biti implementiran.');
+        }
+
+        function viewPairings(id) {
+            alert('Pregled parova će biti implementiran.');
+        }
+
+        function enterResults(id) {
+            alert('Unos rezultata će biti implementiran.');
+        }
+
+        function viewResults(id) {
+            alert('Pregled rezultata će biti implementiran.');
+        }
+
+        function generateReport(id) {
+            alert('Generiranje izvještaja će biti implementirano.');
+        }
+
+        // Initialize
+        let tournamentManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            tournamentManager = new TournamentManager();
+        });
+    </script>
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/userDropdown.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stvori Turnir - COTISA Pro</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 style="display: flex; align-items: center; gap: 8px;"><img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon" style="height: 32px;"> Stvori Novi Turnir</h1>
+            <div class="header-right">
+                <div class="icon-space">
+                    <i class="fas fa-chess-king"></i>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-btn">☰</button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'index' %}"><i class="fas fa-home"></i> Početna</a>
+                        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profil</a>
+                        <a href="{% url 'profile' %}#settings"><i class="fas fa-cog"></i> Postavke</a>
+                        <a href="{% url 'manage_tournaments' %}"><i class="fas fa-trophy"></i> Upravljanje Turnirima</a>
+                        <a href="{% url 'player_database' %}"><i class="fas fa-database"></i> Baza Igrača</a>
+                        <a href="#reports"><i class="fas fa-chart-bar"></i> Izvještaji i Statistike</a>
+                        <a href="{% url 'help' %}"><i class="fas fa-question-circle"></i> Pomoć</a>
+                        <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> O nama</a>
+                        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Odjava</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="create-tournament-container">
+                <div class="wizard-progress">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Osnovni podaci</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Pravila i format</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Pregled i objava</div>
+                    </div>
+                </div>
+
+                <form id="tournament-wizard" class="wizard-form">
+                    <!-- Step 1: Basic Information -->
+                    <div class="wizard-step active" data-step="1">
+                        <h2><i class="fas fa-info-circle"></i> Osnovni podaci turnira</h2>
+                        
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label for="tournament-name">Naziv turnira *</label>
+                                <input type="text" id="tournament-name" required 
+                                       placeholder="npr. Zagreb Open Championship 2024">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="tournament-date">Datum turnira *</label>
+                                    <input type="date" id="tournament-date" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="tournament-time">Vrijeme početka *</label>
+                                    <input type="time" id="tournament-time" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="tournament-location">Lokacija *</label>
+                                <input type="text" id="tournament-location" required 
+                                       placeholder="npr. Zagreb, Dom Sportova, Trg Krešimira Ćosića 11">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="max-players">Maksimalno igrača *</label>
+                                    <select id="max-players" required>
+                                        <option value="">Odaberite...</option>
+                                        <option value="8">8 igrača</option>
+                                        <option value="16">16 igrača</option>
+                                        <option value="32">32 igrača</option>
+                                        <option value="64">64 igrača</option>
+                                        <option value="128">128 igrača</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="entry-fee">Kotizacija (kn)</label>
+                                    <input type="number" id="entry-fee" min="0" 
+                                           placeholder="0 = besplatno">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="organizer">Organizator *</label>
+                                <input type="text" id="organizer" required 
+                                       placeholder="Naziv organizacije ili osobe">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-email">Kontakt email *</label>
+                                <input type="email" id="contact-email" required 
+                                       placeholder="organizator@example.com">
+                            </div>
+                        </div>
+                        
+                        <div class="wizard-navigation">
+                            <button type="button" class="btn-next" onclick="nextStep()">
+                                Sljedeći korak <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Rules and Format -->
+                    <div class="wizard-step" data-step="2">
+                        <h2><i class="fas fa-chess-clock"></i> Pravila i format turnira</h2>
+                        
+                        <div class="form-section">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="time-format">Format turnira *</label>
+                                    <select id="time-format" required onchange="updateTimeControls()">
+                                        <option value="">Odaberite format...</option>
+                                        <option value="blitz">Blitz (3-10 min)</option>
+                                        <option value="rapid">Rapid (15-60 min)</option>
+                                        <option value="classical">Klasično (90+ min)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="time-control">Vremenska kontrola *</label>
+                                    <select id="time-control" required>
+                                        <option value="">Prvo odaberite format</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="tournament-system">Turnirski sustav *</label>
+                                    <select id="tournament-system" required>
+                                        <option value="">Odaberite sustav...</option>
+                                        <option value="swiss">Swiss sustav</option>
+                                        <option value="roundrobin">Kružni turnir</option>
+                                        <option value="elimination">Eliminacijski</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="rounds">Broj rundi</label>
+                                    <input type="number" id="rounds" min="3" max="15" 
+                                           placeholder="Automatski će se izračunati">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="skill-level">Razina vještine</label>
+                                <select id="skill-level">
+                                    <option value="all">Sve razine dobrodošle</option>
+                                    <option value="beginner">Početnici (0-1200)</option>
+                                    <option value="intermediate">Srednji (1200-1800)</option>
+                                    <option value="advanced">Napredni (1800-2200)</option>
+                                    <option value="expert">Eksperti (2200+)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="prize-fund">Nagradni fond (kn)</label>
+                                <input type="number" id="prize-fund" min="0" 
+                                       placeholder="Ostavite prazno ako nema nagrada">
+                                <small>Automatski se predlaže na osnovu kotizacije i broja igrača</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="special-rules">Posebna pravila</label>
+                                <textarea id="special-rules" rows="3" 
+                                          placeholder="Opišite sva dodatna pravila ili uvjete..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="wizard-navigation">
+                            <button type="button" class="btn-prev" onclick="prevStep()">
+                                <i class="fas fa-arrow-left"></i> Prethodni
+                            </button>
+                            <button type="button" class="btn-next" onclick="nextStep()">
+                                Sljedeći korak <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Review and Publish -->
+                    <div class="wizard-step" data-step="3">
+                        <h2><i class="fas fa-eye"></i> Pregled i objava turnira</h2>
+                        
+                        <div class="tournament-preview" id="tournament-preview">
+                            <!-- Tournament preview will be generated here -->
+                        </div>
+                        
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="terms-organizer" required>
+                                    Potvrđujem da su svi podaci točni i da ću odgovorno organizirati turnir
+                                </label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="notification-agree">
+                                    Želim primati obavještenja o registracijama i ažuriranjima
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="wizard-navigation">
+                            <button type="button" class="btn-prev" onclick="prevStep()">
+                                <i class="fas fa-arrow-left"></i> Prethodni
+                            </button>
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-rocket"></i> Objavi Turnir
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        class TournamentCreator {
+            constructor() {
+                this.currentStep = 1;
+                this.tournamentData = {};
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setMinDate();
+                this.updateTimeControls();
+            }
+
+            setupEventListeners() {
+                document.getElementById('tournament-wizard').addEventListener('submit', (e) => this.handleSubmit(e));
+                document.getElementById('max-players').addEventListener('change', () => this.calculateSuggestedRounds());
+                document.getElementById('entry-fee').addEventListener('input', () => this.calculatePrizeFund());
+            }
+
+            setMinDate() {
+                const today = new Date();
+                today.setDate(today.getDate() + 1); // Tomorrow as minimum
+                document.getElementById('tournament-date').min = today.toISOString().split('T')[0];
+            }
+
+            updateTimeControls() {
+                const format = document.getElementById('time-format').value;
+                const timeControlSelect = document.getElementById('time-control');
+                
+                const options = {
+                    'blitz': [
+                        { value: '3+2', text: '3 min + 2 sek po potezu' },
+                        { value: '5+0', text: '5 minuta bez dodavanja' },
+                        { value: '5+3', text: '5 min + 3 sek po potezu' },
+                        { value: '10+0', text: '10 minuta bez dodavanja' }
+                    ],
+                    'rapid': [
+                        { value: '15+10', text: '15 min + 10 sek po potezu' },
+                        { value: '20+5', text: '20 min + 5 sek po potezu' },
+                        { value: '25+10', text: '25 min + 10 sek po potezu' },
+                        { value: '30+0', text: '30 minuta bez dodavanja' }
+                    ],
+                    'classical': [
+                        { value: '90+30', text: '90 min + 30 sek po potezu' },
+                        { value: '120+30', text: '2h + 30 sek po potezu' },
+                        { value: '180+0', text: '3 sata bez dodavanja' }
+                    ]
+                };
+
+                timeControlSelect.innerHTML = '<option value="">Odaberite vremensku kontrolu...</option>';
+                
+                if (options[format]) {
+                    options[format].forEach(option => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = option.value;
+                        optionElement.textContent = option.text;
+                        timeControlSelect.appendChild(optionElement);
+                    });
+                }
+            }
+
+            calculateSuggestedRounds() {
+                const maxPlayers = parseInt(document.getElementById('max-players').value);
+                const system = document.getElementById('tournament-system').value;
+                const roundsInput = document.getElementById('rounds');
+                
+                if (maxPlayers && system === 'swiss') {
+                    const suggestedRounds = Math.ceil(Math.log2(maxPlayers));
+                    roundsInput.placeholder = `Preporučeno: ${suggestedRounds} rundi`;
+                } else if (system === 'roundrobin') {
+                    roundsInput.placeholder = `${maxPlayers - 1} rundi (svi protiv svih)`;
+                }
+            }
+
+            calculatePrizeFund() {
+                const entryFee = parseFloat(document.getElementById('entry-fee').value) || 0;
+                const maxPlayers = parseInt(document.getElementById('max-players').value) || 0;
+                const prizeFundInput = document.getElementById('prize-fund');
+                
+                if (entryFee > 0 && maxPlayers > 0) {
+                    const totalFees = entryFee * maxPlayers;
+                    const suggestedPrize = Math.floor(totalFees * 0.8); // 80% for prizes
+                    prizeFundInput.placeholder = `Preporučeno: ${suggestedPrize} kn (80% kotizacije)`;
+                }
+            }
+
+            nextStep() {
+                if (this.validateCurrentStep()) {
+                    this.currentStep++;
+                    this.showStep(this.currentStep);
+                    
+                    if (this.currentStep === 3) {
+                        this.generatePreview();
+                    }
+                }
+            }
+
+            prevStep() {
+                this.currentStep--;
+                this.showStep(this.currentStep);
+            }
+
+            showStep(step) {
+                // Update progress indicators
+                document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+                document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+                
+                // Show current step
+                document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+                document.querySelector(`.wizard-step[data-step="${step}"]`).classList.add('active');
+            }
+
+            validateCurrentStep() {
+                const currentStepElement = document.querySelector(`.wizard-step[data-step="${this.currentStep}"]`);
+                const requiredInputs = currentStepElement.querySelectorAll('input[required], select[required]');
+                
+                for (let input of requiredInputs) {
+                    if (!input.value.trim()) {
+                        input.focus();
+                        this.showNotification('Molimo unesite sva obavezna polja označena sa *', 'error');
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+
+            generatePreview() {
+                const data = this.collectFormData();
+                const preview = document.getElementById('tournament-preview');
+                
+                preview.innerHTML = `
+                    <div class="preview-card">
+                        <div class="preview-header">
+                            <h3>${data.name}</h3>
+                            <div class="preview-status">NOVO</div>
+                        </div>
+                        
+                        <div class="preview-details">
+                            <div class="detail-row">
+                                <span><i class="fas fa-calendar"></i> ${this.formatDate(data.date)}</span>
+                                <span><i class="fas fa-clock"></i> ${data.time}</span>
+                            </div>
+                            
+                            <div class="detail-row">
+                                <span><i class="fas fa-map-marker-alt"></i> ${data.location}</span>
+                            </div>
+                            
+                            <div class="detail-row">
+                                <span><i class="fas fa-users"></i> Maks. ${data.maxPlayers} igrača</span>
+                                <span><i class="fas fa-chess-clock"></i> ${data.timeControl}</span>
+                            </div>
+                            
+                            ${data.entryFee ? `
+                                <div class="detail-row">
+                                    <span><i class="fas fa-coins"></i> Kotizacija: ${data.entryFee} kn</span>
+                                    ${data.prizeFund ? `<span><i class="fas fa-trophy"></i> Nagrade: ${data.prizeFund} kn</span>` : ''}
+                                </div>
+                            ` : ''}
+                            
+                            <div class="detail-row">
+                                <span><i class="fas fa-user-tie"></i> ${data.organizer}</span>
+                                <span><i class="fas fa-envelope"></i> ${data.contactEmail}</span>
+                            </div>
+                            
+                            ${data.specialRules ? `
+                                <div class="preview-rules">
+                                    <strong>Posebna pravila:</strong>
+                                    <p>${data.specialRules}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            collectFormData() {
+                return {
+                    name: document.getElementById('tournament-name').value,
+                    date: document.getElementById('tournament-date').value,
+                    time: document.getElementById('tournament-time').value,
+                    location: document.getElementById('tournament-location').value,
+                    maxPlayers: document.getElementById('max-players').value,
+                    entryFee: document.getElementById('entry-fee').value,
+                    organizer: document.getElementById('organizer').value,
+                    contactEmail: document.getElementById('contact-email').value,
+                    timeFormat: document.getElementById('time-format').value,
+                    timeControl: document.getElementById('time-control').value,
+                    tournamentSystem: document.getElementById('tournament-system').value,
+                    rounds: document.getElementById('rounds').value,
+                    skillLevel: document.getElementById('skill-level').value,
+                    prizeFund: document.getElementById('prize-fund').value,
+                    specialRules: document.getElementById('special-rules').value
+                };
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('hr-HR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                
+                if (!this.validateCurrentStep()) return;
+                
+                const tournamentData = {
+                    ...this.collectFormData(),
+                    id: Date.now(),
+                    createdAt: new Date().toISOString(),
+                    currentPlayers: 0,
+                    status: 'published'
+                };
+
+                // Save to localStorage
+                const tournaments = JSON.parse(localStorage.getItem('created_tournaments') || '[]');
+                tournaments.unshift(tournamentData);
+                localStorage.setItem('created_tournaments', JSON.stringify(tournaments));
+
+                this.showNotification('Turnir je uspješno objavljen!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'manage-tournaments.html';
+                }, 2000);
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.classList.add('show'), 100);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 4000);
+            }
+        }
+
+        // Global functions
+        function nextStep() {
+            tournamentCreator.nextStep();
+        }
+
+        function prevStep() {
+            tournamentCreator.prevStep();
+        }
+
+        function updateTimeControls() {
+            tournamentCreator.updateTimeControls();
+        }
+
+        // Initialize
+        let tournamentCreator;
+        document.addEventListener('DOMContentLoaded', () => {
+            tournamentCreator = new TournamentCreator();
+        });
+    </script>
+</body>
+</html>

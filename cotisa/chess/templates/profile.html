@@ -1,0 +1,484 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - COTISA Pro</title>
+    <link rel="stylesheet" href="{% static 'css/themes.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}?v=17">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}?v=8">
+    <link rel="stylesheet" href="{% static 'css/theme-overrides.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/mobile.css' %}?v=23">
+    <style>
+        /* Force hide mobile nav items on desktop */
+        @media (min-width: 577px) {
+            .mobile-nav-item,
+            .mobile-nav-divider {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'index' %}" class="nav-brand">
+                <img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon">
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="{% url 'index' %}">🏠 Početna</a></li>
+                <li><a href="{% url 'player_database' %}">👥 Igrači</a></li>
+                <li><a href="{% url 'profile' %}" class="active">👤 Profil</a></li>
+                <li><a href="{% url 'manage_tournaments' %}" class="admin-only">⚙️ Admin</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-dropdown-container">
+                    <button class="user-dropdown-btn" id="user-dropdown-btn">
+                        <span id="username-display">{{ user.username }}</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="user-dropdown-header">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-details">
+                                <div class="user-name">{{ user.username }}</div>
+                                <div class="user-email">{{ user.email }}</div>
+                            </div>
+                        </div>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="{% url 'profile' %}" class="user-dropdown-item">
+                            <span class="item-icon">👤</span><span>Moj Profil</span>
+                        </a>
+                        <a href="{% url 'manage_tournaments' %}" class="user-dropdown-item admin-only">
+                            <span class="item-icon">⚙️</span><span>Admin Upravljanje</span>
+                        </a>
+                        <a href="{% static 'settings.html' %}" class="user-dropdown-item">
+                            <span class="item-icon">⚙️</span><span>Postavke</span>
+                        </a>
+                        <a href="{% static 'help.html' %}" class="user-dropdown-item">
+                            <span class="item-icon">❓</span><span>Pomoć</span>
+                        </a>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="user-dropdown-item logout-item">
+                            <span class="item-icon">🚪</span><span>Odjava</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="app">
+    <div class="container">
+
+        <main class="profile-main">
+            <div class="profile-layout">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <!-- Player Picture Section -->
+                    <div class="player-picture-section">
+                        <div class="player-picture">
+                            <i class="fas fa-user-circle"></i>
+                            <div class="picture-placeholder">Click to upload photo</div>
+                        </div>
+                        <div class="player-info">
+                            <h2>Player Name</h2>
+                            <p class="player-rating">Rating: --</p>
+                            <p class="player-rank">Rank: --</p>
+                        </div>
+                    </div>
+
+                    <!-- Match History Section -->
+                    <div class="match-history-section">
+                        <h3><i class="fas fa-history"></i> Last 5 Matches</h3>
+                        <div class="match-list">
+                            <div class="match-item">
+                                <div class="match-info">
+                                    <span class="opponent">vs. John Smith</span>
+                                    <span class="match-date">Sep 28, 2025</span>
+                                </div>
+                                <div class="match-result win">WIN</div>
+                            </div>
+                            <div class="match-item">
+                                <div class="match-info">
+                                    <span class="opponent">vs. Alice Johnson</span>
+                                    <span class="match-date">Sep 25, 2025</span>
+                                </div>
+                                <div class="match-result loss">LOSS</div>
+                            </div>
+                            <div class="match-item">
+                                <div class="match-info">
+                                    <span class="opponent">vs. Mike Davis</span>
+                                    <span class="match-date">Sep 22, 2025</span>
+                                </div>
+                                <div class="match-result win">WIN</div>
+                            </div>
+                            <div class="match-item">
+                                <div class="match-info">
+                                    <span class="opponent">vs. Sarah Wilson</span>
+                                    <span class="match-date">Sep 20, 2025</span>
+                                </div>
+                                <div class="match-result draw">DRAW</div>
+                            </div>
+                            <div class="match-item">
+                                <div class="match-info">
+                                    <span class="opponent">vs. Robert Brown</span>
+                                    <span class="match-date">Sep 18, 2025</span>
+                                </div>
+                                <div class="match-result loss">LOSS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- Profile Settings Section -->
+                    <div class="profile-settings-section">
+                        <h3><i class="fas fa-cog"></i> Profile Settings</h3>
+                        <div class="settings-form">
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" name="username" value="PlayerName123">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" value="player@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country:</label>
+                                <select id="country" name="country">
+                                    <option value="us">United States</option>
+                                    <option value="uk">United Kingdom</option>
+                                    <option value="ca">Canada</option>
+                                    <option value="au">Australia</option>
+                                </select>
+                            </div>
+                            <div class="button-group">
+                                <button class="save-btn">Save Changes</button>
+                                <button class="additional-settings-btn" onclick="openAdditionalSettings()">Additional Settings</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Free Slot Section -->
+                    <div class="free-slot-section">
+                        <h3><i class="fas fa-plus-square"></i> Free Slot</h3>
+                        <div class="free-slot-content">
+                            <p>This space is available for additional features or custom content.</p>
+                            <div class="slot-placeholder">
+                                <i class="fas fa-puzzle-piece"></i>
+                                <span>Add custom widget or feature here</span>
+                            </div>
+                            <button class="customize-btn">Customize</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        </div>
+    </div>
+
+    <!-- Additional Settings Popup -->
+    <div id="additionalSettingsPopup" class="popup-overlay">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2><i class="fas fa-cogs"></i> Additional Settings</h2>
+                <button class="popup-close" onclick="closeAdditionalSettings()">&times;</button>
+            </div>
+            <div class="popup-body">
+                <!-- Main Settings Menu -->
+                <div id="mainSettingsMenu" class="settings-view active">
+                    <div class="settings-buttons">
+                        <button class="settings-menu-btn" onclick="showTitlesView()">
+                            <i class="fas fa-trophy"></i>
+                            <span>Tournament Titles</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button class="settings-menu-btn" onclick="showAchievementsView()">
+                            <i class="fas fa-star"></i>
+                            <span>Achievements</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button class="settings-menu-btn" onclick="showPreferencesView()">
+                            <i class="fas fa-cog"></i>
+                            <span>Game Preferences</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button class="settings-menu-btn" onclick="showThemesView()">
+                            <i class="fas fa-palette"></i>
+                            <span>Themes & Appearance</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button class="settings-menu-btn disabled">
+                            <i class="fas fa-plus"></i>
+                            <span>More Coming Soon</span>
+                            <i class="fas fa-lock"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tournament Titles View -->
+                <div id="titlesView" class="settings-view">
+                    <div class="view-header">
+                        <button class="back-btn" onclick="showMainMenu()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <h3><i class="fas fa-trophy"></i> Tournament Titles</h3>
+                        <!-- Admin Controls (will be shown only for admin users) -->
+                        <div class="admin-controls" style="display: none;" id="adminTitleControls">
+                            <button class="admin-btn" onclick="toggleAdminMode()" title="Admin: Award/Revoke Titles">
+                                <i class="fas fa-user-shield"></i> Admin Mode
+                            </button>
+                        </div>
+                    </div>
+                    <div class="titles-list-container">
+                        <div class="titles-list">
+                            <div class="title-item unlocked">
+                                <div class="title-icon">
+                                    <i class="fas fa-chess-pawn"></i>
+                                </div>
+                                <div class="title-info">
+                                    <span class="title-name">Novice Player</span>
+                                    <span class="title-requirement">Complete first tournament</span>
+                                </div>
+                                <div class="title-status unlocked">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <!-- Admin controls (hidden by default) -->
+                                <div class="admin-title-controls" style="display: none;">
+                                    <button class="admin-action-btn revoke-btn" onclick="adminRevokeTitle('novice')" title="Revoke this title">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="title-item locked">
+                                <div class="title-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="title-info">
+                                    <span class="title-name">Rising Star</span>
+                                    <span class="title-requirement">Win 10 tournaments</span>
+                                </div>
+                                <div class="title-status locked">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <!-- Admin controls (hidden by default) -->
+                                <div class="admin-title-controls" style="display: none;">
+                                    <button class="admin-action-btn award-btn" onclick="adminAwardTitle('rising-star')" title="Award this title">
+                                        <i class="fas fa-gift"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="title-item locked">
+                                <div class="title-icon">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                <div class="title-info">
+                                    <span class="title-name">Chess Champion</span>
+                                    <span class="title-requirement">Win 25 tournaments</span>
+                                </div>
+                                <div class="title-status locked">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                            </div>
+                            <div class="title-item locked">
+                                <div class="title-icon">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                                <div class="title-info">
+                                    <span class="title-name">Grand Master</span>
+                                    <span class="title-requirement">Win 50 tournaments</span>
+                                </div>
+                                <div class="title-status locked">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                            </div>
+                            <div class="title-item locked">
+                                <div class="title-icon">
+                                    <i class="fas fa-chess-king"></i>
+                                </div>
+                                <div class="title-info">
+                                    <span class="title-name">Chess Legend</span>
+                                    <span class="title-requirement">Win 100 tournaments</span>
+                                </div>
+                                <div class="title-status locked">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                            </div>
+                            <div class="title-item locked">
+                                <div class="title-icon">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="title-info">
+                                    <span class="title-name">Blitz Master</span>
+                                    <span class="title-requirement">Win 20 blitz tournaments</span>
+                                </div>
+                                <div class="title-status locked">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placeholder views for other buttons -->
+                <div id="achievementsView" class="settings-view">
+                    <div class="view-header">
+                        <button class="back-btn" onclick="showMainMenu()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <h3><i class="fas fa-star"></i> Achievements</h3>
+                    </div>
+                    <div class="coming-soon">
+                        <i class="fas fa-star"></i>
+                        <p>Achievement system coming soon!</p>
+                    </div>
+                </div>
+
+                <div id="preferencesView" class="settings-view">
+                    <div class="view-header">
+                        <button class="back-btn" onclick="showMainMenu()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <h3><i class="fas fa-cog"></i> Game Preferences</h3>
+                    </div>
+                    <div class="coming-soon">
+                        <i class="fas fa-cog"></i>
+                        <p>Game preferences coming soon!</p>
+                    </div>
+                </div>
+
+                <div id="themesView" class="settings-view">
+                    <div class="view-header">
+                        <button class="back-btn" onclick="showMainMenu()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <h3><i class="fas fa-palette"></i> Themes & Appearance</h3>
+                    </div>
+                    <div class="coming-soon">
+                        <i class="fas fa-palette"></i>
+                        <p>Theme customization coming soon!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="popup-btn-secondary" onclick="closeAdditionalSettings()">Close</button>
+                <button class="popup-btn-primary">Apply Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openAdditionalSettings() {
+            document.getElementById('additionalSettingsPopup').style.display = 'flex';
+            showMainMenu(); // Always start with main menu
+        }
+
+        function closeAdditionalSettings() {
+            document.getElementById('additionalSettingsPopup').style.display = 'none';
+        }
+
+        // Navigation functions
+        function showMainMenu() {
+            hideAllViews();
+            document.getElementById('mainSettingsMenu').classList.add('active');
+        }
+
+        function showTitlesView() {
+            hideAllViews();
+            document.getElementById('titlesView').classList.add('active');
+        }
+
+        function showAchievementsView() {
+            hideAllViews();
+            document.getElementById('achievementsView').classList.add('active');
+        }
+
+        function showPreferencesView() {
+            hideAllViews();
+            document.getElementById('preferencesView').classList.add('active');
+        }
+
+        function showThemesView() {
+            hideAllViews();
+            document.getElementById('themesView').classList.add('active');
+        }
+
+        function hideAllViews() {
+            const views = document.querySelectorAll('.settings-view');
+            views.forEach(view => view.classList.remove('active'));
+        }
+
+        // Admin Functions (placeholder - will be implemented with backend)
+        let adminModeActive = false;
+
+        function toggleAdminMode() {
+            adminModeActive = !adminModeActive;
+            const adminControls = document.querySelectorAll('.admin-title-controls');
+            const adminBtn = document.querySelector('.admin-btn');
+            
+            if (adminModeActive) {
+                adminControls.forEach(control => control.style.display = 'flex');
+                adminBtn.classList.add('active');
+                adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Exit Admin';
+            } else {
+                adminControls.forEach(control => control.style.display = 'none');
+                adminBtn.classList.remove('active');
+                adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin Mode';
+            }
+        }
+
+        function adminAwardTitle(titleId) {
+            // Placeholder for admin award functionality
+            // This will connect to your backend to award the title
+            if (confirm(`Award this title to the player?\n\nThis action will be logged in the admin panel.`)) {
+                console.log(`Admin awarded title: ${titleId}`);
+                // Here you would make an API call to your backend
+                // Example: fetch('/api/admin/award-title', { method: 'POST', body: JSON.stringify({titleId, playerId}) })
+                alert('Title awarded! (This is a placeholder - will be implemented with backend)');
+            }
+        }
+
+        function adminRevokeTitle(titleId) {
+            // Placeholder for admin revoke functionality
+            // This will connect to your backend to revoke the title
+            if (confirm(`Revoke this title from the player?\n\nThis action will be logged in the admin panel.`)) {
+                console.log(`Admin revoked title: ${titleId}`);
+                // Here you would make an API call to your backend
+                // Example: fetch('/api/admin/revoke-title', { method: 'POST', body: JSON.stringify({titleId, playerId}) })
+                alert('Title revoked! (This is a placeholder - will be implemented with backend)');
+            }
+        }
+
+        // Check if user is admin (placeholder - will check with backend)
+        function checkAdminStatus() {
+            // This would normally check with your backend if the current user is an admin
+            // For now, it's hidden by default
+            const isAdmin = false; // Will be determined by your authentication system
+            
+            if (isAdmin) {
+                document.getElementById('adminTitleControls').style.display = 'block';
+            }
+        }
+
+        // Initialize admin status check when popup opens
+        function openAdditionalSettings() {
+            document.getElementById('additionalSettingsPopup').style.display = 'flex';
+            showMainMenu(); // Always start with main menu
+            checkAdminStatus(); // Check if user has admin privileges
+        }
+
+        // Close popup when clicking outside
+        window.onclick = function(event) {
+            const popup = document.getElementById('additionalSettingsPopup');
+            if (event.target === popup) {
+                popup.style.display = 'none';
+            }
+        }
+    </script>
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/userDropdown.js' %}"></script>
+</body>
+</html>

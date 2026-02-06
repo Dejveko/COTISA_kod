@@ -1,0 +1,377 @@
+/* =================================
+   COTISA Pro - Theme System
+   Multiple Theme Support
+   ================================= */
+
+/* Default Theme (Light Mode) */
+:root {
+    /* Primary Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+    --bg-card: #ffffff;
+    --bg-hover: #f1f3f5;
+    
+    /* Text Colors */
+    --text-primary: #212529;
+    --text-secondary: #495057;
+    --text-tertiary: #6c757d;
+    --text-inverse: #ffffff;
+    
+    /* Border Colors */
+    --border-color: #dee2e6;
+    --border-light: #e9ecef;
+    --border-dark: #adb5bd;
+    
+    /* Brand Colors */
+    --primary: #667eea;
+    --primary-dark: #5568d3;
+    --primary-light: #7c8ff0;
+    --secondary: #764ba2;
+    --accent: #e74c3c;
+    --success: #27ae60;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --info: #3498db;
+    
+    /* Shadow Colors */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+    
+    /* Overlay */
+    --overlay-bg: rgba(0, 0, 0, 0.5);
+    
+    /* Gradient Background */
+    --gradient-start: #667eea;
+    --gradient-end: #764ba2;
+    
+    /* Chess Board Colors */
+    --chess-light: #f0d9b5;
+    --chess-dark: #b58863;
+    
+    /* Navbar */
+    --navbar-bg: #2c3e50;
+    --navbar-text: #ffffff;
+    
+    /* Card */
+    --card-shadow: var(--shadow-md);
+    
+    /* Active Player Highlight */
+    --active-player-color: #667eea;
+    --active-player-glow: rgba(102, 126, 234, 0.3);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+    /* Primary Colors */
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-tertiary: #0f3460;
+    --bg-card: #16213e;
+    --bg-hover: #1f2b4d;
+    
+    /* Text Colors */
+    --text-primary: #e4e4e4;
+    --text-secondary: #b8b8b8;
+    --text-tertiary: #8e8e8e;
+    --text-inverse: #1a1a2e;
+    
+    /* Border Colors */
+    --border-color: #2d3748;
+    --border-light: #1f2937;
+    --border-dark: #4a5568;
+    
+    /* Brand Colors */
+    --primary: #667eea;
+    --primary-dark: #5568d3;
+    --primary-light: #7c8ff0;
+    --secondary: #764ba2;
+    --accent: #e74c3c;
+    --success: #2ecc71;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --info: #3498db;
+    
+    /* Shadow Colors */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
+    
+    /* Overlay */
+    --overlay-bg: rgba(0, 0, 0, 0.7);
+    
+    /* Gradient Background */
+    --gradient-start: #1a1a2e;
+    --gradient-end: #16213e;
+    
+    /* Chess Board Colors */
+    --chess-light: #4a5568;
+    --chess-dark: #2d3748;
+    
+    /* Navbar */
+    --navbar-bg: #0f1419;
+    --navbar-text: #e4e4e4;
+    
+    /* Card */
+    --card-shadow: var(--shadow-lg);
+    
+    /* Active Player Highlight */
+    --active-player-color: #7c8ff0;
+    --active-player-glow: rgba(124, 143, 240, 0.4);
+}
+
+/* Blue Ocean Theme */
+[data-theme="blue"] {
+    /* Primary Colors */
+    --bg-primary: #e8f4f8;
+    --bg-secondary: #d4ebf2;
+    --bg-tertiary: #b8dde8;
+    --bg-card: #ffffff;
+    --bg-hover: #c7e3ee;
+    
+    /* Text Colors */
+    --text-primary: #0c4a6e;
+    --text-secondary: #075985;
+    --text-tertiary: #0369a1;
+    --text-inverse: #ffffff;
+    
+    /* Border Colors */
+    --border-color: #7dd3fc;
+    --border-light: #bae6fd;
+    --border-dark: #38bdf8;
+    
+    /* Brand Colors */
+    --primary: #0284c7;
+    --primary-dark: #0369a1;
+    --primary-light: #0ea5e9;
+    --secondary: #06b6d4;
+    --accent: #f43f5e;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    
+    /* Shadow Colors */
+    --shadow-sm: 0 2px 4px rgba(6,182,212,0.1);
+    --shadow-md: 0 4px 6px rgba(6,182,212,0.15);
+    --shadow-lg: 0 10px 25px rgba(6,182,212,0.2);
+    --shadow-xl: 0 20px 40px rgba(6,182,212,0.25);
+    
+    /* Overlay */
+    --overlay-bg: rgba(6, 95, 126, 0.5);
+    
+    /* Gradient Background */
+    --gradient-start: #0ea5e9;
+    --gradient-end: #06b6d4;
+    
+    /* Chess Board Colors */
+    --chess-light: #e0f2fe;
+    --chess-dark: #7dd3fc;
+    
+    /* Navbar */
+    --navbar-bg: #075985;
+    --navbar-text: #ffffff;
+    
+    /* Card */
+    --card-shadow: var(--shadow-md);
+    
+    /* Active Player Highlight */
+    --active-player-color: #0ea5e9;
+    --active-player-glow: rgba(14, 165, 233, 0.3);
+}
+
+/* Purple Dream Theme */
+[data-theme="purple"] {
+    /* Primary Colors */
+    --bg-primary: #faf5ff;
+    --bg-secondary: #f3e8ff;
+    --bg-tertiary: #e9d5ff;
+    --bg-card: #ffffff;
+    --bg-hover: #ede5ff;
+    
+    /* Text Colors */
+    --text-primary: #581c87;
+    --text-secondary: #6b21a8;
+    --text-tertiary: #7c3aed;
+    --text-inverse: #ffffff;
+    
+    /* Border Colors */
+    --border-color: #d8b4fe;
+    --border-light: #e9d5ff;
+    --border-dark: #c084fc;
+    
+    /* Brand Colors */
+    --primary: #9333ea;
+    --primary-dark: #7c3aed;
+    --primary-light: #a855f7;
+    --secondary: #c026d3;
+    --accent: #ec4899;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #8b5cf6;
+    
+    /* Shadow Colors */
+    --shadow-sm: 0 2px 4px rgba(147,51,234,0.1);
+    --shadow-md: 0 4px 6px rgba(147,51,234,0.15);
+    --shadow-lg: 0 10px 25px rgba(147,51,234,0.2);
+    --shadow-xl: 0 20px 40px rgba(147,51,234,0.25);
+    
+    /* Overlay */
+    --overlay-bg: rgba(107, 33, 168, 0.5);
+    
+    /* Gradient Background */
+    --gradient-start: #9333ea;
+    --gradient-end: #c026d3;
+    
+    /* Chess Board Colors */
+    --chess-light: #f3e8ff;
+    --chess-dark: #d8b4fe;
+    
+    /* Navbar */
+    --navbar-bg: #6b21a8;
+    --navbar-text: #ffffff;
+    
+    /* Card */
+    --card-shadow: var(--shadow-md);
+    
+    /* Active Player Highlight */
+    --active-player-color: #a855f7;
+    --active-player-glow: rgba(168, 85, 247, 0.3);
+}
+
+/* Green Forest Theme */
+[data-theme="green"] {
+    /* Primary Colors */
+    --bg-primary: #f0fdf4;
+    --bg-secondary: #dcfce7;
+    --bg-tertiary: #bbf7d0;
+    --bg-card: #ffffff;
+    --bg-hover: #d1f5dd;
+    
+    /* Text Colors */
+    --text-primary: #14532d;
+    --text-secondary: #15803d;
+    --text-tertiary: #16a34a;
+    --text-inverse: #ffffff;
+    
+    /* Border Colors */
+    --border-color: #86efac;
+    --border-light: #bbf7d0;
+    --border-dark: #4ade80;
+    
+    /* Brand Colors */
+    --primary: #16a34a;
+    --primary-dark: #15803d;
+    --primary-light: #22c55e;
+    --secondary: #059669;
+    --accent: #f97316;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #06b6d4;
+    
+    /* Shadow Colors */
+    --shadow-sm: 0 2px 4px rgba(22,163,74,0.1);
+    --shadow-md: 0 4px 6px rgba(22,163,74,0.15);
+    --shadow-lg: 0 10px 25px rgba(22,163,74,0.2);
+    --shadow-xl: 0 20px 40px rgba(22,163,74,0.25);
+    
+    /* Overlay */
+    --overlay-bg: rgba(21, 128, 61, 0.5);
+    
+    /* Gradient Background */
+    --gradient-start: #22c55e;
+    --gradient-end: #059669;
+    
+    /* Chess Board Colors */
+    --chess-light: #dcfce7;
+    --chess-dark: #86efac;
+    
+    /* Navbar */
+    --navbar-bg: #15803d;
+    --navbar-text: #ffffff;
+    
+    /* Card */
+    --card-shadow: var(--shadow-md);
+    
+    /* Active Player Highlight */
+    --active-player-color: #22c55e;
+    --active-player-glow: rgba(34, 197, 94, 0.3);
+}
+
+/* Sunset Theme */
+[data-theme="sunset"] {
+    /* Primary Colors */
+    --bg-primary: #fff7ed;
+    --bg-secondary: #ffedd5;
+    --bg-tertiary: #fed7aa;
+    --bg-card: #ffffff;
+    --bg-hover: #ffe4c4;
+    
+    /* Text Colors */
+    --text-primary: #7c2d12;
+    --text-secondary: #9a3412;
+    --text-tertiary: #c2410c;
+    --text-inverse: #ffffff;
+    
+    /* Border Colors */
+    --border-color: #fdba74;
+    --border-light: #fed7aa;
+    --border-dark: #fb923c;
+    
+    /* Brand Colors */
+    --primary: #ea580c;
+    --primary-dark: #c2410c;
+    --primary-light: #f97316;
+    --secondary: #dc2626;
+    --accent: #f59e0b;
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --danger: #dc2626;
+    --info: #3b82f6;
+    
+    /* Shadow Colors */
+    --shadow-sm: 0 2px 4px rgba(234,88,12,0.1);
+    --shadow-md: 0 4px 6px rgba(234,88,12,0.15);
+    --shadow-lg: 0 10px 25px rgba(234,88,12,0.2);
+    --shadow-xl: 0 20px 40px rgba(234,88,12,0.25);
+    
+    /* Overlay */
+    --overlay-bg: rgba(154, 52, 18, 0.5);
+    
+    /* Gradient Background */
+    --gradient-start: #f97316;
+    --gradient-end: #dc2626;
+    
+    /* Chess Board Colors */
+    --chess-light: #ffedd5;
+    --chess-dark: #fdba74;
+    
+    /* Navbar */
+    --navbar-bg: #9a3412;
+    --navbar-text: #ffffff;
+    
+    /* Card */
+    --card-shadow: var(--shadow-md);
+    
+    /* Active Player Highlight */
+    --active-player-color: #f97316;
+    --active-player-glow: rgba(249, 115, 22, 0.3);
+}
+
+/* Smooth transition for theme changes */
+body,
+.navbar,
+.card,
+.btn,
+.modal,
+.dropdown-menu,
+input,
+textarea,
+select {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

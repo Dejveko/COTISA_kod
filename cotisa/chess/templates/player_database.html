@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baza Igrača - COTISA Pro</title>
+    <link rel="stylesheet" href="{% static 'css/themes.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}?v=17">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}?v=8">
+    <link rel="stylesheet" href="{% static 'css/theme-overrides.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/mobile.css' %}?v=23">
+    <style>
+        /* Force hide mobile nav items on desktop */
+        @media (min-width: 577px) {
+            .mobile-nav-item,
+            .mobile-nav-divider {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'index' %}" class="nav-brand">
+                <img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon">
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="{% url 'index' %}">🏠 Početna</a></li>
+                <li><a href="{% url 'player_database' %}" class="active">👥 Igrači</a></li>
+                <li><a href="{% url 'profile' %}">👤 Profil</a></li>
+                <li><a href="{% url 'manage_tournaments' %}" class="admin-only">⚙️ Admin</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-dropdown-container">
+                    <button class="user-dropdown-btn" id="user-dropdown-btn">
+                        <span id="username-display">{{ user.username }}</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="user-dropdown-header">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-details">
+                                <div class="user-name">{{ user.username }}</div>
+                                <div class="user-email">{{ user.email }}</div>
+                            </div>
+                        </div>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="{% url 'profile' %}" class="user-dropdown-item">
+                            <span class="item-icon">👤</span><span>Moj Profil</span>
+                        </a>
+                        <a href="{% url 'manage_tournaments' %}" class="user-dropdown-item admin-only">
+                            <span class="item-icon">⚙️</span><span>Admin Upravljanje</span>
+                        </a>
+                        <a href="{% static 'settings.html' %}" class="user-dropdown-item">
+                            <span class="item-icon">⚙️</span><span>Postavke</span>
+                        </a>
+                        <a href="{% static 'help.html' %}" class="user-dropdown-item">
+                            <span class="item-icon">❓</span><span>Pomoć</span>
+                        </a>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="user-dropdown-item logout-item">
+                            <span class="item-icon">🚪</span><span>Odjava</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="app">
+    <div class="container">
+
+        <main>
+            <h1>Baza Igrača</h1>
+            <p>Ovdje će biti prikazana baza svih igrača.</p>
+        </main>
+        </div>
+    </div>
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/userDropdown.js' %}"></script>
+</body>
+</html>

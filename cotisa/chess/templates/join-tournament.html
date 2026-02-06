@@ -1,0 +1,417 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pridruži se Turniru - COTISA Pro</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 style="display: flex; align-items: center; gap: 8px;"><img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon" style="height: 32px;"> Pridruži se Turniru</h1>
+            <div class="header-right">
+                <div class="icon-space">
+                    <i class="fas fa-chess-king"></i>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-btn">☰</button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'index' %}"><i class="fas fa-home"></i> Početna</a>
+                        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profil</a>
+                        <a href="{% url 'profile' %}#settings"><i class="fas fa-cog"></i> Postavke</a>
+                        <a href="{% url 'manage_tournaments' %}"><i class="fas fa-trophy"></i> Upravljanje Turnirima</a>
+                        <a href="{% url 'player_database' %}"><i class="fas fa-database"></i> Baza Igrača</a>
+                        <a href="#reports"><i class="fas fa-chart-bar"></i> Izvještaji i Statistike</a>
+                        <a href="{% url 'help' %}"><i class="fas fa-question-circle"></i> Pomoć</a>
+                        <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> O nama</a>
+                        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Odjava</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="join-tournament-container">
+                <div class="page-header">
+                    <h2><i class="fas fa-users"></i> Dostupni Turniri</h2>
+                    <div class="filter-controls">
+                        <select id="skill-filter">
+                            <option value="all">Sve razine</option>
+                            <option value="beginner">Početnik (0-1200)</option>
+                            <option value="intermediate">Srednji (1200-1800)</option>
+                            <option value="advanced">Napredni (1800-2200)</option>
+                            <option value="expert">Ekspert (2200+)</option>
+                        </select>
+                        <select id="format-filter">
+                            <option value="all">Svi formati</option>
+                            <option value="blitz">Blitz (3-5 min)</option>
+                            <option value="rapid">Rapid (15-30 min)</option>
+                            <option value="classical">Klasično (90+ min)</option>
+                        </select>
+                        <input type="text" id="search-tournaments" placeholder="Pretraži turnire...">
+                    </div>
+                </div>
+
+                <div class="tournaments-list" id="tournaments-list">
+                    <!-- Tournament cards will be populated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Join Tournament Modal -->
+    <div id="join-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeJoinModal()">&times;</span>
+            <h3><i class="fas fa-user-plus"></i> Pridruži se Turniru</h3>
+            
+            <div id="tournament-details">
+                <!-- Tournament details will be populated here -->
+            </div>
+            
+            <form id="join-form">
+                <div class="form-group">
+                    <label for="player-name">Vaše ime:</label>
+                    <input type="text" id="player-name" required placeholder="Unesite svoje ime">
+                </div>
+                
+                <div class="form-group">
+                    <label for="player-rating">Vaš rating:</label>
+                    <input type="number" id="player-rating" min="100" max="3000" placeholder="Unesite svoj chess rating">
+                </div>
+                
+                <div class="form-group">
+                    <label for="player-email">Email:</label>
+                    <input type="email" id="player-email" required placeholder="vaš.email@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="terms-agree" required>
+                        Slažem se s uvjetima turnira i pravilima ponašanja
+                    </label>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" onclick="closeJoinModal()">Odustani</button>
+                    <button type="submit">Pridruži se Turniru</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class TournamentJoiner {
+            constructor() {
+                this.tournaments = this.generateSampleTournaments();
+                this.filteredTournaments = [...this.tournaments];
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.displayTournaments();
+            }
+
+            setupEventListeners() {
+                document.getElementById('skill-filter').addEventListener('change', () => this.filterTournaments());
+                document.getElementById('format-filter').addEventListener('change', () => this.filterTournaments());
+                document.getElementById('search-tournaments').addEventListener('input', () => this.filterTournaments());
+                document.getElementById('join-form').addEventListener('submit', (e) => this.handleJoin(e));
+            }
+
+            generateSampleTournaments() {
+                return [
+                    {
+                        id: 1,
+                        name: "Zagreb Open Championship 2024",
+                        date: "2024-10-15",
+                        time: "09:00",
+                        format: "rapid",
+                        timeControl: "15+10",
+                        skillLevel: "intermediate",
+                        maxPlayers: 64,
+                        currentPlayers: 42,
+                        entryFee: "150 kn",
+                        prize: "5000 kn",
+                        location: "Zagreb, Dom Sportova",
+                        organizer: "Šahovski klub Zagreb"
+                    },
+                    {
+                        id: 2,
+                        name: "Split Blitz Tournament",
+                        date: "2024-10-08",
+                        time: "18:00",
+                        format: "blitz",
+                        timeControl: "3+2",
+                        skillLevel: "all",
+                        maxPlayers: 32,
+                        currentPlayers: 28,
+                        entryFee: "50 kn",
+                        prize: "1000 kn",
+                        location: "Split, Kulturni centar",
+                        organizer: "ŠK Split 1700"
+                    },
+                    {
+                        id: 3,
+                        name: "Rijeka Classical Masters",
+                        date: "2024-10-22",
+                        time: "10:00",
+                        format: "classical",
+                        timeControl: "90+30",
+                        skillLevel: "advanced",
+                        maxPlayers: 16,
+                        currentPlayers: 12,
+                        entryFee: "300 kn",
+                        prize: "10000 kn",
+                        location: "Rijeka, Hotel Kontinental",
+                        organizer: "Šahovski savez Primorsko-goranske županije"
+                    },
+                    {
+                        id: 4,
+                        name: "Osijek Youth Championship",
+                        date: "2024-10-12",
+                        time: "14:00",
+                        format: "rapid",
+                        timeControl: "20+10",
+                        skillLevel: "beginner",
+                        maxPlayers: 48,
+                        currentPlayers: 35,
+                        entryFee: "75 kn",
+                        prize: "2000 kn",
+                        location: "Osijek, Osnovna škola Retfala",
+                        organizer: "ŠK Osijek"
+                    },
+                    {
+                        id: 5,
+                        name: "Pula Summer Rapid",
+                        date: "2024-10-05",
+                        time: "16:00",
+                        format: "rapid",
+                        timeControl: "15+5",
+                        skillLevel: "intermediate",
+                        maxPlayers: 40,
+                        currentPlayers: 31,
+                        entryFee: "100 kn",
+                        prize: "3000 kn",
+                        location: "Pula, Arena centar",
+                        organizer: "ŠK Pula"
+                    },
+                    {
+                        id: 6,
+                        name: "Zadar Expert Tournament",
+                        date: "2024-10-18",
+                        time: "09:30",
+                        format: "classical",
+                        timeControl: "120+30",
+                        skillLevel: "expert",
+                        maxPlayers: 12,
+                        currentPlayers: 8,
+                        entryFee: "500 kn",
+                        prize: "15000 kn",
+                        location: "Zadar, Hotel Bastion",
+                        organizer: "ŠK Zadar"
+                    }
+                ];
+            }
+
+            filterTournaments() {
+                const skillFilter = document.getElementById('skill-filter').value;
+                const formatFilter = document.getElementById('format-filter').value;
+                const searchTerm = document.getElementById('search-tournaments').value.toLowerCase();
+
+                this.filteredTournaments = this.tournaments.filter(tournament => {
+                    const matchesSkill = skillFilter === 'all' || tournament.skillLevel === skillFilter;
+                    const matchesFormat = formatFilter === 'all' || tournament.format === formatFilter;
+                    const matchesSearch = tournament.name.toLowerCase().includes(searchTerm) ||
+                                         tournament.location.toLowerCase().includes(searchTerm);
+
+                    return matchesSkill && matchesFormat && matchesSearch;
+                });
+
+                this.displayTournaments();
+            }
+
+            displayTournaments() {
+                const container = document.getElementById('tournaments-list');
+                
+                if (this.filteredTournaments.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-tournaments">
+                            <i class="fas fa-search"></i>
+                            <h3>Nema pronađenih turnira</h3>
+                            <p>Pokušajte promijeniti filtere ili pretraživanje.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.filteredTournaments.map(tournament => `
+                    <div class="tournament-card ${tournament.currentPlayers >= tournament.maxPlayers ? 'full' : ''}">
+                        <div class="tournament-header">
+                            <h3>${tournament.name}</h3>
+                            <div class="tournament-status ${tournament.currentPlayers >= tournament.maxPlayers ? 'full' : 'open'}">
+                                ${tournament.currentPlayers >= tournament.maxPlayers ? 'POPUNJEN' : 'OTVOREN'}
+                            </div>
+                        </div>
+                        
+                        <div class="tournament-details">
+                            <div class="detail-row">
+                                <span><i class="fas fa-calendar"></i> ${this.formatDate(tournament.date)}</span>
+                                <span><i class="fas fa-clock"></i> ${tournament.time}</span>
+                            </div>
+                            
+                            <div class="detail-row">
+                                <span><i class="fas fa-chess-clock"></i> ${tournament.timeControl}</span>
+                                <span><i class="fas fa-signal"></i> ${this.getSkillLevelText(tournament.skillLevel)}</span>
+                            </div>
+                            
+                            <div class="detail-row">
+                                <span><i class="fas fa-users"></i> ${tournament.currentPlayers}/${tournament.maxPlayers}</span>
+                                <span><i class="fas fa-coins"></i> ${tournament.entryFee}</span>
+                            </div>
+                            
+                            <div class="detail-row">
+                                <span><i class="fas fa-map-marker-alt"></i> ${tournament.location}</span>
+                            </div>
+                            
+                            <div class="detail-row">
+                                <span><i class="fas fa-trophy"></i> Nagrada: ${tournament.prize}</span>
+                            </div>
+                            
+                            <div class="organizer">
+                                <i class="fas fa-user-tie"></i> ${tournament.organizer}
+                            </div>
+                        </div>
+                        
+                        <div class="tournament-actions">
+                            ${tournament.currentPlayers >= tournament.maxPlayers ? 
+                                '<button class="join-btn disabled" disabled>Popunjen</button>' : 
+                                `<button class="join-btn" onclick="openJoinModal(${tournament.id})">Pridruži se</button>`
+                            }
+                            <button class="info-btn" onclick="showTournamentInfo(${tournament.id})">
+                                <i class="fas fa-info-circle"></i> Detalji
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('hr-HR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+
+            getSkillLevelText(level) {
+                const levels = {
+                    'all': 'Sve razine',
+                    'beginner': 'Početnik',
+                    'intermediate': 'Srednji',
+                    'advanced': 'Napredni',
+                    'expert': 'Ekspert'
+                };
+                return levels[level] || level;
+            }
+
+            openJoinModal(tournamentId) {
+                const tournament = this.tournaments.find(t => t.id === tournamentId);
+                if (!tournament) return;
+
+                document.getElementById('tournament-details').innerHTML = `
+                    <div class="selected-tournament">
+                        <h4>${tournament.name}</h4>
+                        <p><i class="fas fa-calendar"></i> ${this.formatDate(tournament.date)} u ${tournament.time}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> ${tournament.location}</p>
+                        <p><i class="fas fa-coins"></i> Kotizacija: ${tournament.entryFee}</p>
+                    </div>
+                `;
+
+                document.getElementById('join-modal').style.display = 'block';
+                document.getElementById('join-form').dataset.tournamentId = tournamentId;
+            }
+
+            handleJoin(e) {
+                e.preventDefault();
+                
+                const tournamentId = parseInt(e.target.dataset.tournamentId);
+                const tournament = this.tournaments.find(t => t.id === tournamentId);
+                
+                const playerData = {
+                    name: document.getElementById('player-name').value,
+                    rating: document.getElementById('player-rating').value,
+                    email: document.getElementById('player-email').value,
+                    tournamentId: tournamentId
+                };
+
+                // Update tournament participants
+                tournament.currentPlayers++;
+                
+                // Save to localStorage
+                const joinedTournaments = JSON.parse(localStorage.getItem('joined_tournaments') || '[]');
+                joinedTournaments.push({
+                    ...playerData,
+                    joinedAt: new Date().toISOString(),
+                    tournamentName: tournament.name
+                });
+                localStorage.setItem('joined_tournaments', JSON.stringify(joinedTournaments));
+
+                this.closeJoinModal();
+                this.showNotification(`Uspješno ste se prijavili na turnir "${tournament.name}"!`, 'success');
+                this.displayTournaments();
+            }
+
+            closeJoinModal() {
+                document.getElementById('join-modal').style.display = 'none';
+                document.getElementById('join-form').reset();
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.classList.add('show'), 100);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 4000);
+            }
+        }
+
+        // Global functions
+        function openJoinModal(tournamentId) {
+            tournamentJoiner.openJoinModal(tournamentId);
+        }
+
+        function closeJoinModal() {
+            tournamentJoiner.closeJoinModal();
+        }
+
+        function showTournamentInfo(tournamentId) {
+            const tournament = tournamentJoiner.tournaments.find(t => t.id === tournamentId);
+            alert(`Detaljne informacije o turniru:\n\n${tournament.name}\n\nOrganizator će poslati dodatne informacije na vašu email adresu nakon prijave.`);
+        }
+
+        // Initialize
+        let tournamentJoiner;
+        document.addEventListener('DOMContentLoaded', () => {
+            tournamentJoiner = new TournamentJoiner();
+        });
+    </script>
+</body>
+</html>

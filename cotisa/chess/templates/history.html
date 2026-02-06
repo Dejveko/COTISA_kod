@@ -1,0 +1,432 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Povijest Turnira - COTISA Pro</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="{% url 'index' %}" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;"><img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon" style="height: 32px;"> COTISA Pro</a></h1>
+            <div class="header-right">
+                <div class="icon-space">
+                    <i class="fas fa-chess-king"></i>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown()">☰</button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'index' %}"><i class="fas fa-home"></i> Početna</a>
+                        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profil</a>
+                        <a href="#" onclick="openSettingsFromNav(); return false;"><i class="fas fa-cog"></i> Postavke</a>
+                        <a href="{% url 'manage_tournaments' %}"><i class="fas fa-trophy"></i> Upravljanje Turnirima</a>
+                        <a href="{% url 'player_database' %}"><i class="fas fa-database"></i> Baza Igrača</a>
+                        <a href="{% url 'history' %}"><i class="fas fa-chart-bar"></i> Izvještaji i Statistike</a>
+                        <a href="{% url 'help' %}"><i class="fas fa-question-circle"></i> Pomoć</a>
+                        <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> O nama</a>
+                        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Odjava</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="history-container">
+                <div class="history-header">
+                    <h2><i class="fas fa-trophy"></i> Vaša Povijest Turnira</h2>
+                    <button class="add-tournament-btn" onclick="openAddTournamentModal()">
+                        <i class="fas fa-plus"></i> Dodaj Turnir
+                    </button>
+                </div>
+
+                <div class="tournament-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chess-board"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-tournaments">0</h3>
+                            <p>Ukupno Turnira</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="wins">0</h3>
+                            <p>Pobjede</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="podium-finishes">0</h3>
+                            <p>Top 3 Pozicije</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="avg-rating">0</h3>
+                            <p>Prosjek Rating</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tournament-controls">
+                    <div class="search-filter">
+                        <input type="text" id="search-input" placeholder="Pretraži turnire..." />
+                        <select id="filter-select">
+                            <option value="all">Svi turniri</option>
+                            <option value="won">Pobijđeni</option>
+                            <option value="top3">Top 3</option>
+                            <option value="recent">Nedavni</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="tournaments-grid" id="tournaments-grid">
+                    <!-- Tournament cards will be dynamically added here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Tournament Modal -->
+    <div id="add-tournament-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddTournamentModal()">&times;</span>
+            <h3><i class="fas fa-plus-circle"></i> Dodaj Novi Turnir</h3>
+            
+            <form id="tournament-form">
+                <div class="form-group">
+                    <label for="tournament-name">Naziv Turnira:</label>
+                    <input type="text" id="tournament-name" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tournament-date">Datum:</label>
+                        <input type="date" id="tournament-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tournament-position">Pozicija:</label>
+                        <input type="number" id="tournament-position" min="1" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tournament-participants">Broj sudionika:</label>
+                        <input type="number" id="tournament-participants" min="2" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tournament-rating">Vaš rating:</label>
+                        <input type="number" id="tournament-rating" min="100" max="3000">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tournament-notes">Bilješke:</label>
+                    <textarea id="tournament-notes" rows="3" placeholder="Dodajte bilješke o turniru..."></textarea>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" onclick="closeAddTournamentModal()">Odustani</button>
+                    <button type="submit">Dodaj Turnir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class TournamentHistory {
+            constructor() {
+                this.tournaments = this.loadTournaments();
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.addSampleData();
+                this.displayTournaments();
+                this.updateStatistics();
+            }
+
+            setupEventListeners() {
+                document.getElementById('tournament-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addTournament();
+                });
+
+                document.getElementById('search-input').addEventListener('input', () => {
+                    this.filterTournaments();
+                });
+
+                document.getElementById('filter-select').addEventListener('change', () => {
+                    this.filterTournaments();
+                });
+            }
+
+            loadTournaments() {
+                const stored = localStorage.getItem('tournament_history');
+                return stored ? JSON.parse(stored) : [];
+            }
+
+            saveTournaments() {
+                localStorage.setItem('tournament_history', JSON.stringify(this.tournaments));
+            }
+
+            addSampleData() {
+                if (this.tournaments.length === 0) {
+                    const sampleTournaments = [
+                        {
+                            id: Date.now() + 1,
+                            name: "Zagreb Open 2024",
+                            date: "2024-03-15",
+                            position: 2,
+                            participants: 64,
+                            rating: 1850,
+                            notes: "Odličan turnir, blizu pobjede!"
+                        },
+                        {
+                            id: Date.now() + 2,
+                            name: "Split Chess Cup",
+                            date: "2024-02-20",
+                            position: 1,
+                            participants: 32,
+                            rating: 1820,
+                            notes: "Prva pobjeda ove godine!"
+                        },
+                        {
+                            id: Date.now() + 3,
+                            name: "Rijeka Championship",
+                            date: "2024-01-10",
+                            position: 5,
+                            participants: 48,
+                            rating: 1780,
+                            notes: "Dobra praksa, naučio puno."
+                        }
+                    ];
+                    this.tournaments = sampleTournaments;
+                    this.saveTournaments();
+                }
+            }
+
+            addTournament() {
+                const form = document.getElementById('tournament-form');
+                const formData = new FormData(form);
+                
+                const tournament = {
+                    id: Date.now(),
+                    name: document.getElementById('tournament-name').value,
+                    date: document.getElementById('tournament-date').value,
+                    position: parseInt(document.getElementById('tournament-position').value),
+                    participants: parseInt(document.getElementById('tournament-participants').value),
+                    rating: parseInt(document.getElementById('tournament-rating').value) || 0,
+                    notes: document.getElementById('tournament-notes').value
+                };
+
+                this.tournaments.unshift(tournament);
+                this.saveTournaments();
+                this.displayTournaments();
+                this.updateStatistics();
+                this.closeAddTournamentModal();
+                this.showNotification('Turnir je uspješno dodan!', 'success');
+                
+                form.reset();
+            }
+
+            deleteTournament(id) {
+                if (confirm('Jeste li sigurni da želite obrisati ovaj turnir?')) {
+                    try {
+                        const index = this.tournaments.findIndex(t => t.id != id);
+                        if (index !== -1) {
+                            this.tournaments.splice(index, 1);
+                            this.saveTournaments();
+                            this.displayTournaments();
+                            this.updateStatistics();
+                            this.showNotification('Turnir je uspješno obrisan!', 'success');
+                        } else {
+                            this.showNotification('Greška: Turnir nije pronađen!', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error deleting tournament:', error);
+                        this.showNotification('Greška pri brisanju turnira!', 'error');
+                    }
+                }
+            }
+
+            displayTournaments(tournaments = this.tournaments) {
+                const grid = document.getElementById('tournaments-grid');
+                
+                if (tournaments.length === 0) {
+                    grid.innerHTML = `
+                        <div class="no-tournaments">
+                            <i class="fas fa-chess-board"></i>
+                            <h3>Nema turnira za prikaz</h3>
+                            <p>Dodajte svoj prvi turnir klikom na "Dodaj Turnir" gumb.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = tournaments.map(tournament => `
+                    <div class="tournament-card ${tournament.position <= 3 ? 'podium' : ''}">
+                        <div class="tournament-header">
+                            <h3>${tournament.name}</h3>
+                            <div class="tournament-position ${this.getPositionClass(tournament.position)}">
+                                ${this.getPositionIcon(tournament.position)} ${tournament.position}.
+                            </div>
+                        </div>
+                        
+                        <div class="tournament-info">
+                            <div class="info-row">
+                                <span><i class="fas fa-calendar"></i> ${this.formatDate(tournament.date)}</span>
+                                <span><i class="fas fa-users"></i> ${tournament.participants} sudionika</span>
+                            </div>
+                            ${tournament.rating ? `
+                                <div class="info-row">
+                                    <span><i class="fas fa-star"></i> Rating: ${tournament.rating}</span>
+                                </div>
+                            ` : ''}
+                            ${tournament.notes ? `
+                                <div class="tournament-notes">
+                                    <i class="fas fa-sticky-note"></i> ${tournament.notes}
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="tournament-actions">
+                            <button class="action-btn delete" onclick="deleteTournament(${tournament.id})">
+                                <i class="fas fa-trash"></i> Obriši
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            getPositionClass(position) {
+                if (position === 1) return 'first';
+                if (position === 2) return 'second';
+                if (position === 3) return 'third';
+                return 'other';
+            }
+
+            getPositionIcon(position) {
+                if (position === 1) return '<i class="fas fa-trophy"></i>';
+                if (position === 2) return '<i class="fas fa-medal"></i>';
+                if (position === 3) return '<i class="fas fa-award"></i>';
+                return '<i class="fas fa-hashtag"></i>';
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('hr-HR');
+            }
+
+            updateStatistics() {
+                const total = this.tournaments.length;
+                const wins = this.tournaments.filter(t => t.position === 1).length;
+                const podium = this.tournaments.filter(t => t.position <= 3).length;
+                const avgRating = total > 0 ? 
+                    Math.round(this.tournaments.reduce((sum, t) => sum + (t.rating || 0), 0) / total) : 0;
+
+                document.getElementById('total-tournaments').textContent = total;
+                document.getElementById('wins').textContent = wins;
+                document.getElementById('podium-finishes').textContent = podium;
+                document.getElementById('avg-rating').textContent = avgRating;
+            }
+
+            filterTournaments() {
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                const filter = document.getElementById('filter-select').value;
+                
+                let filtered = this.tournaments.filter(tournament => 
+                    tournament.name.toLowerCase().includes(searchTerm)
+                );
+
+                switch (filter) {
+                    case 'won':
+                        filtered = filtered.filter(t => t.position === 1);
+                        break;
+                    case 'top3':
+                        filtered = filtered.filter(t => t.position <= 3);
+                        break;
+                    case 'recent':
+                        const threeMonthsAgo = new Date();
+                        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+                        filtered = filtered.filter(t => new Date(t.date) >= threeMonthsAgo);
+                        break;
+                }
+
+                this.displayTournaments(filtered);
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // Global functions for modal
+        function openAddTournamentModal() {
+            document.getElementById('add-tournament-modal').style.display = 'block';
+            // Set today's date as default
+            document.getElementById('tournament-date').value = new Date().toISOString().split('T')[0];
+        }
+
+        function closeAddTournamentModal() {
+            document.getElementById('add-tournament-modal').style.display = 'none';
+        }
+
+        // Global delete function
+        function deleteTournament(id) {
+            if (window.tournamentHistory) {
+                window.tournamentHistory.deleteTournament(id);
+            } else {
+                console.error('Tournament history not initialized');
+            }
+        }
+
+        // Initialize when page loads
+        let tournamentHistory;
+        document.addEventListener('DOMContentLoaded', () => {
+            tournamentHistory = new TournamentHistory();
+            window.tournamentHistory = tournamentHistory; // Make it globally accessible
+        });
+    </script>
+    <script src="{% static 'js/dropdown.js' %}"></script>
+</body>
+</html>

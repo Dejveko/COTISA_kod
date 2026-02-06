@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COTISA Pro - Upravljanje Turnirima</title>
+    <link rel="stylesheet" href="{% static 'css/themes.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}?v=17">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}?v=8">
+    <link rel="stylesheet" href="{% static 'css/theme-overrides.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/button-fix.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/mobile.css' %}?v=23">
+    <style>
+        /* Force hide mobile nav items on desktop */
+        @media (min-width: 577px) {
+            .mobile-nav-item,
+            .mobile-nav-divider {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'index' %}" class="nav-brand">
+                <img src="{% static 'images/logo_cotisa.png' %}" alt="COTISA" class="logo-icon">
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="{% url 'index' %}" id="nav-dashboard">🏠 Početna</a></li>
+                <li><a href="{% url 'player_database' %}" id="nav-players">👥 Igrači</a></li>
+                <li><a href="{% url 'profile' %}" id="nav-profile">👤 Profil</a></li>
+                <li><a href="{% url 'manage_tournaments' %}" id="nav-admin" class="admin-only">⚙️ Admin</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-dropdown-container">
+                    <button class="user-dropdown-btn" id="user-dropdown-btn" title="Korisnički meni">
+                        <span id="username-display">{{ user.username }}</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="user-dropdown-header">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-details">
+                                <div class="user-name" id="dropdown-username">{{ user.username }}</div>
+                                <div class="user-email" id="dropdown-email">{{ user.email }}</div>
+                            </div>
+                        </div>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="{% url 'profile' %}" class="user-dropdown-item">
+                            <span class="item-icon">👤</span>
+                            <span>Moj Profil</span>
+                        </a>
+                        <a href="{% url 'manage_tournaments' %}" class="user-dropdown-item admin-only">
+                            <span class="item-icon">⚙️</span>
+                            <span>Admin Upravljanje</span>
+                        </a>
+                        <a href="{% static 'settings.html' %}" class="user-dropdown-item">
+                            <span class="item-icon">⚙️</span>
+                            <span>Postavke</span>
+                        </a>
+                        <a href="{% static 'help.html' %}" class="user-dropdown-item">
+                            <span class="item-icon">❓</span>
+                            <span>Pomoć</span>
+                        </a>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="user-dropdown-item logout-item">
+                            <span class="item-icon">🚪</span>
+                            <span>Odjava</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="app">
+        <div class="container">
+
+        <main>
+            
+            <div class="menu-grid">
+                <div class="menu-block" onclick="joinTournament()">
+                    <div class="block-content">
+                        <div class="block-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Pridruži se Turniru</h3>
+                        <p>Pronađi i pridruži se postojećim šahovskim turnirima. Filtriraj po razini vještine, vremenskom formatu i lokaciji. Povežи se s igračima iz cijelog svijeta.</p>
+                    </div>
+                    <button class="menu-btn" onclick="joinTournament()">
+                        <i class="fas fa-sign-in-alt"></i>
+                        PRIDRUŽI SE
+                    </button>
+                </div>
+                
+                <div class="menu-block" onclick="createTournament()">
+                    <div class="block-content">
+                        <div class="block-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <h3>Stvori Turnir</h3>
+                        <p>Postavi vlastiti šahovski turnir. Konfiguriraj pravila, vremenske kontrole, ograničenja igrača i format turnira. Pozovi igrače i upravljaj registracijama.</p>
+                    </div>
+                    <button class="menu-btn" onclick="createTournament()">
+                        <i class="fas fa-hammer"></i>
+                        STVORI
+                    </button>
+                </div>
+                
+                <div class="menu-block" onclick="window.location.href='{% url 'history' %}'">
+                    <div class="block-content">
+                        <div class="block-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h3>Povijest Turnira</h3>
+                        <p>Pregledaj prošle rezultate turnira, statistike i analizu performansi. Prati svoj napredak i pregledaj partije iz prethodnih natjecanja.</p>
+                    </div>
+                    <button class="menu-btn" onclick="window.location.href='{% url 'history' %}'">
+                        <i class="fas fa-chart-line"></i>
+                        POVIJEST
+                    </button>
+                </div>
+                
+                <div class="menu-block" onclick="manageTournaments()">
+                    <div class="block-content">
+                        <div class="block-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3>Upravljaj Turnirima</h3>
+                        <p>Organiziraj i nadgledaj svoje aktivne turnire. Ažuriraj parove, unesi rezultate, upravljaj igračima i generiraj izvještaje turnira.</p>
+                    </div>
+                    <button class="menu-btn" onclick="manageTournaments()">
+                        <i class="fas fa-tasks"></i>
+                        UPRAVLJAJ
+                    </button>
+                </div>
+            </div>
+        </main>
+        </div>
+    </div>
+
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/userDropdown.js' %}"></script>
+    <script>
+        function joinTournament() {
+            window.location.href = "{% url 'join_tournament' %}";
+        }
+
+        function createTournament() {
+            window.location.href = "{% url 'create_tournament' %}";
+        }
+
+        function manageTournaments() {
+            window.location.href = "{% url 'manage_tournaments' %}";
+        }
+
+        // Osiguraj da svi gumbovi reagiraju na klik
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.menu-btn');
+            buttons.forEach(button => {
+                button.style.pointerEvents = 'auto';
+                button.style.cursor = 'pointer';
+            });
+        });
+        
+        function openSettingsFromNav() {
+            window.location.href = "{% url 'profile' %}#settings";
+        }
+
+        // Add smooth animations and interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBlocks = document.querySelectorAll('.menu-block');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            });
+
+            menuBlocks.forEach(block => {
+                observer.observe(block);
+            });
+
+            menuBlocks.forEach(block => {
+                block.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>
